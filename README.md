@@ -12,6 +12,7 @@ Each visualizer is a standalone HTML/CSS/JS app built by contributors.
 |---|---------|-----------|------|
 | 190 | [Reverse Bits](problems/190/) | Easy | Bit Manipulation |
 | 799 | [Champagne Tower](problems/799/) | Medium | DP, Simulation |
+| 1518 | [Water Bottles](problems/1518/) | Easy | Math, Simulation |
 
 > More coming soon — [contribute one!](#-contributing)
 
@@ -51,7 +52,7 @@ LeetCode Problem Page
 
 We want visualizers for **every** LeetCode problem! Here's how:
 
-1. **Use the AI prompt** — Copy [PROMPT.md](PROMPT.md) and paste it into any LLM to generate a complete visualizer
+1. **Use the AI prompt** — Copy [PROMPT.md](PROMPT.md) and paste it into any LLM (ChatGPT, Claude, Gemini) or use an AI-powered IDE (Cursor, Windsurf, GitHub Copilot, etc.) to generate a complete visualizer
 2. **Follow the format** — See [CONTRIBUTING.md](CONTRIBUTING.md) for requirements
 3. **Submit a PR** — Add your `problems/<number>/` folder and update `registry.json`
 
@@ -64,7 +65,7 @@ git clone https://github.com/YOUR-USERNAME/leetViz.git
 # Create your visualizer folder
 mkdir problems/42  # Replace with problem number
 
-# Generate files using PROMPT.md with any LLM
+# Generate files using PROMPT.md with any LLM or AI-powered IDE
 # Place: index.html, style.css, app.js, meta.json
 
 # Update registry
@@ -92,7 +93,7 @@ leetViz/
 │   └── 799/             # Champagne Tower
 ├── shared/
 │   └── theme.css        # Shared design system
-├── PROMPT.md            # LLM prompt for generating visualizers
+├── PROMPT.md            # AI prompt for generating visualizers (LLMs & AI IDEs)
 ├── CONTRIBUTING.md      # How to contribute
 └── README.md
 ```
@@ -102,7 +103,7 @@ leetViz/
 All visualizers share a common dark theme via `shared/theme.css`:
 - **Fonts:** Inter + JetBrains Mono
 - **Theme:** Deep dark backgrounds with customizable accent colors
-- **Components:** Panels, buttons, sliders, algorithm steps, result cards
+- **Components:** Panels, buttons, sliders, progressive hints, result cards
 
 Each visualizer overrides `--accent` to get its own identity while maintaining visual consistency.
 

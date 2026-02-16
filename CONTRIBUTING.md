@@ -5,7 +5,7 @@ Thanks for wanting to contribute a visualizer! 🎉 Here's how to add one for a 
 ## Quick Start
 
 1. **Fork** this repo
-2. **Generate** visualizer files using [PROMPT.md](PROMPT.md) with any LLM
+2. **Generate** visualizer files using [PROMPT.md](PROMPT.md) with any LLM or AI-powered IDE
 3. **Place** files in `problems/<number>/`
 4. **Update** `problems/registry.json`
 5. **Test** locally, then submit a **PR**
@@ -26,7 +26,7 @@ problems/<number>/
 - ✅ Import shared theme: `<link rel="stylesheet" href="../../shared/theme.css" />`
 - ✅ Play / Step / Reset buttons
 - ✅ Speed control slider (1× to 5×)
-- ✅ Algorithm step panel with highlighting
+- ✅ Progressive hints panel (5 hints, blurred, sequential reveal)
 - ✅ At least 2 preset examples from LeetCode
 - ✅ Correct algorithm output (verified against LeetCode)
 - ✅ `meta.json` with all fields filled
@@ -39,7 +39,7 @@ problems/<number>/
 ## Style Guide
 
 - Override `--accent` color in your `style.css` `:root` block
-- Use BEM class names from the shared theme (`.panel`, `.btn`, `.algo-step`, etc.)
+- Use BEM class names from the shared theme (`.panel`, `.btn`, `.hint`, etc.)
 - Wrap JS in an IIFE: `(() => { 'use strict'; ... })()`
 - Use `const`/`let`, no `var`
 
@@ -60,4 +60,4 @@ problems/<number>/
 
 ## Using the LLM Prompt
 
-See [PROMPT.md](PROMPT.md) for a ready-to-use prompt. Just fill in the problem details and paste it into ChatGPT, Claude, Gemini, or any LLM.
+See [PROMPT.md](PROMPT.md) for a ready-to-use prompt. Just fill in the problem details and paste it into any LLM (ChatGPT, Claude, Gemini) or use it with an AI-powered IDE like Cursor, Windsurf, or GitHub Copilot.
