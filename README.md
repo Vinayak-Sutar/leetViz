@@ -107,10 +107,6 @@ All visualizers share a common dark theme via `shared/theme.css`:
 
 Each visualizer overrides `--accent` to get its own identity while maintaining visual consistency.
 
-## 🛠️ Built With
-
-This project was built with the help of [**Antigravity**](https://blog.google/technology/google-deepmind/antigravity-ai-coding/) — an AI coding assistant by Google DeepMind. From the design system and Chrome extension architecture to the progressive hints system, Antigravity pair-programmed the entire codebase.
-
-## 📄 License
+##  License
 
 MIT — build, share, visualize!
