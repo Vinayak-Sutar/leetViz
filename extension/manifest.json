@@ -5,6 +5,7 @@
     "description": "Interactive visualizers for LeetCode problems — powered by the community.",
     "permissions": [
         "activeTab",
+        "tabs",
         "sidePanel",
         "storage"
     ],

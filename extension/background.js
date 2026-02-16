@@ -105,7 +105,7 @@ chrome.action.onClicked.addListener((tab) => {
 // ===== Enable/disable side panel based on tab URL =====
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (!tab.url) return;
-  // Only react to URL changes, not every update
+  // Only react to URL changes
   if (!changeInfo.url && !changeInfo.status) return;
 
   const isLeetCodeProblem = tab.url.includes('leetcode.com/problems/');
@@ -117,11 +117,12 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       enabled: true,
     });
   } else {
-    // Any non-problem page (other sites OR leetcode.com/explore, /contest, etc.)
+    // Close and disable the side panel on non-problem pages
     chrome.sidePanel.setOptions({
       tabId,
       enabled: false,
     });
+    chrome.sidePanel.close({ tabId }).catch(() => {});
     tabProblems.delete(tabId);
   }
 });
@@ -131,7 +132,7 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   tabProblems.delete(tabId);
 });
 
-// ===== When user switches tabs, notify side panel =====
+// ===== When user switches tabs, notify side panel or close it =====
 chrome.tabs.onActivated.addListener(({ tabId }) => {
   const problem = tabProblems.get(tabId);
   if (problem) {
@@ -139,13 +140,17 @@ chrome.tabs.onActivated.addListener(({ tabId }) => {
       currentProblem: { ...problem, tabId, timestamp: Date.now() }
     });
   } else {
-    // Switching to a non-LeetCode tab — tell side panel to clear
-    chrome.storage.local.set({
-      currentProblem: { slug: null, number: null, tabId, timestamp: Date.now() }
+    // Check if this tab is a LeetCode problem page
+    chrome.tabs.get(tabId, (tab) => {
+      if (chrome.runtime.lastError) return;
+      
+      if (!tab.url || !tab.url.includes('leetcode.com/problems/')) {
+        // Not a problem page — close the side panel
+        chrome.sidePanel.close({ tabId }).catch(() => {});
+        chrome.storage.local.set({
+          currentProblem: { slug: null, number: null, tabId, timestamp: Date.now() }
+        });
+      }
     });
-    chrome.runtime.sendMessage({
-      type: 'PROBLEM_CHANGED',
-      problem: null
-    }).catch(() => {});
   }
 });
