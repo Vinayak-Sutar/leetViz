@@ -3,12 +3,25 @@
     "190": {
       "title": "Reverse Bits",
       "difficulty": "easy",
-      "tags": ["bit-manipulation"]
+      "tags": [
+        "bit-manipulation"
+      ]
     },
     "799": {
       "title": "Champagne Tower",
       "difficulty": "medium",
-      "tags": ["dynamic-programming", "simulation"]
+      "tags": [
+        "dynamic-programming",
+        "simulation"
+      ]
+    },
+    "1518": {
+      "title": "Water Bottles",
+      "difficulty": "easy",
+      "tags": [
+        "math",
+        "simulation"
+      ]
     }
   }
 }

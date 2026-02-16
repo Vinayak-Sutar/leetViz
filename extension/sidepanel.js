@@ -1,12 +1,13 @@
 /**
  * LeetViz — Side Panel Controller
- * Queries the background for current problem info,
- * checks the registry, and loads the visualizer iframe.
+ * Fetches problem info, checks registry, and loads the visualizer iframe.
+ * Reacts to navigation changes via chrome.storage and direct messaging.
  */
 (() => {
   'use strict';
 
-  const GITHUB_PAGES_BASE = 'https://vinayak-sutar.github.io/leetViz';
+  // PRODUCTION: const GITHUB_PAGES_BASE = 'https://vinayak-sutar.github.io/leetViz';
+  const GITHUB_PAGES_BASE = 'http://localhost:8190'; // LOCAL DEV
   const REGISTRY_URL = `${GITHUB_PAGES_BASE}/problems/registry.json`;
 
   // DOM
@@ -21,28 +22,49 @@
   const errorMsg = document.getElementById('errorMsg');
   const retryBtn = document.getElementById('retryBtn');
 
+  // ===== State =====
+  let currentLoadedNumber = null; // Track what's currently displayed
+  let registryCache = null;
+
   // ===== Show specific state =====
-  function showState(id) {
-    [stateLoading, stateViz, stateNotFound, stateError, stateNoProblem].forEach(el => {
-      el.style.display = 'none';
+  function showState(el) {
+    [stateLoading, stateViz, stateNotFound, stateError, stateNoProblem].forEach(s => {
+      s.style.display = 'none';
     });
-    id.style.display = 'flex';
+    el.style.display = 'flex';
   }
 
-  // ===== Fetch registry directly (fallback if background is unavailable) =====
+  // ===== Fetch registry =====
   async function fetchRegistry() {
+    if (registryCache) return registryCache;
+
     try {
       const res = await fetch(REGISTRY_URL, { cache: 'no-cache' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.json();
+      registryCache = await res.json();
+      return registryCache;
     } catch (err) {
       console.error('[LeetViz SP] Registry fetch failed:', err);
       return null;
     }
   }
 
-  // ===== Get current problem from storage (set by content script → background) =====
-  function getCurrentProblem() {
+  // ===== Ask background for current problem =====
+  function askBackgroundForProblem() {
+    return new Promise((resolve) => {
+      chrome.runtime.sendMessage({ type: 'GET_CURRENT_PROBLEM' }, (response) => {
+        if (chrome.runtime.lastError) {
+          console.warn('[LeetViz SP] Background unavailable:', chrome.runtime.lastError);
+          resolve(null);
+        } else {
+          resolve(response?.problem || null);
+        }
+      });
+    });
+  }
+
+  // ===== Get from storage =====
+  function getFromStorage() {
     return new Promise((resolve) => {
       chrome.storage.local.get('currentProblem', (data) => {
         resolve(data.currentProblem || null);
@@ -50,34 +72,26 @@
     });
   }
 
-  // ===== Main init =====
-  async function init() {
-    showState(stateLoading);
-
-    // Get current problem
-    const problem = await getCurrentProblem();
-
+  // ===== Load a problem's visualizer =====
+  async function loadProblem(problem) {
     if (!problem || !problem.number) {
-      // Try waiting a moment for the content script to report
-      await new Promise(r => setTimeout(r, 2000));
-      const retry = await getCurrentProblem();
-      if (!retry || !retry.number) {
-        showState(stateNoProblem);
-        return;
-      }
-      return loadProblem(retry);
+      showState(stateNoProblem);
+      return;
     }
 
-    return loadProblem(problem);
-  }
-
-  async function loadProblem(problem) {
     const num = problem.number;
     const slug = problem.slug || '—';
 
+    // Skip if we're already showing this exact problem
+    if (num === currentLoadedNumber) {
+      console.log('[LeetViz SP] Already showing problem #' + num);
+      return;
+    }
+
+    showState(stateLoading);
     problemBadge.textContent = `#${num} ${slug.replace(/-/g, ' ')}`;
 
-    // Check registry
+    // Fetch registry
     const registry = await fetchRegistry();
     if (!registry) {
       showState(stateError);
@@ -89,27 +103,84 @@
     if (info) {
       // Load the visualizer
       const vizUrl = `${GITHUB_PAGES_BASE}/problems/${num}/index.html`;
+      console.log('[LeetViz SP] Loading visualizer:', vizUrl);
+
       vizFrame.src = vizUrl;
       showState(stateViz);
       problemBadge.textContent = `#${num} ${info.title}`;
+      currentLoadedNumber = num;
     } else {
       // Not found
       notfoundNumber.textContent = `#${num}`;
+      problemBadge.textContent = `#${num} ${slug.replace(/-/g, ' ')}`;
       showState(stateNotFound);
+      currentLoadedNumber = num;
     }
   }
 
-  // ===== Retry =====
-  retryBtn.addEventListener('click', init);
+  // ===== Force reload (e.g. when navigating to same problem number) =====
+  function forceReload(problem) {
+    currentLoadedNumber = null; // Reset so loadProblem runs
+    loadProblem(problem);
+  }
 
-  // ===== Listen for updates from background (SPA navigation) =====
+  // ===== Main init =====
+  async function init() {
+    showState(stateLoading);
+
+    // Try getting problem from background first (more reliable)
+    let problem = await askBackgroundForProblem();
+
+    if (!problem || !problem.number) {
+      // Fallback to storage
+      problem = await getFromStorage();
+    }
+
+    if (!problem || !problem.number) {
+      // Wait a moment for the content script to report
+      await new Promise(r => setTimeout(r, 2500));
+      problem = await askBackgroundForProblem() || await getFromStorage();
+    }
+
+    if (problem && problem.number) {
+      loadProblem(problem);
+    } else {
+      showState(stateNoProblem);
+    }
+  }
+
+  // ===== React to storage changes (content script detected a new problem) =====
   chrome.storage.onChanged.addListener((changes) => {
     if (changes.currentProblem) {
       const newVal = changes.currentProblem.newValue;
+      console.log('[LeetViz SP] Storage changed:', newVal);
+
       if (newVal && newVal.number) {
-        loadProblem(newVal);
+        if (newVal.number !== currentLoadedNumber) {
+          registryCache = null; // Force fresh registry lookup
+          loadProblem(newVal);
+        }
       }
     }
+  });
+
+  // ===== Backup: direct message from background (more reliable than storage) =====
+  chrome.runtime.onMessage.addListener((msg) => {
+    if (msg.type === 'PROBLEM_CHANGED' && msg.problem) {
+      console.log('[LeetViz SP] Direct message received:', msg.problem);
+
+      if (msg.problem.number && msg.problem.number !== currentLoadedNumber) {
+        registryCache = null; // Force fresh registry lookup
+        loadProblem(msg.problem);
+      }
+    }
+  });
+
+  // ===== Retry button =====
+  retryBtn.addEventListener('click', () => {
+    registryCache = null;
+    currentLoadedNumber = null;
+    init();
   });
 
   // ===== Init =====

@@ -31,7 +31,37 @@
   const dpTable = $('#dpTable');
   const currentRowDisplay = $('#currentRowDisplay');
 
-  const algoSteps = [0, 1, 2, 3].map(i => $(`#algoStep${i}`));
+  // ===== Hints System =====
+  const hintsContainer = $('#hintsContainer');
+  const hintsCountEl = $('#hintsCount');
+  const hintsProgressFill = $('#hintsProgressFill');
+  let revealedHints = 0;
+  const totalHints = 5;
+
+  function initHints() {
+    revealedHints = 0;
+    document.querySelectorAll('.hint').forEach((hint, i) => {
+      hint.classList.remove('revealed');
+      if (i > 0) hint.classList.add('locked');
+      else hint.classList.remove('locked');
+
+      hint.addEventListener('click', () => {
+        const idx = parseInt(hint.dataset.hint);
+        if (hint.classList.contains('locked') || hint.classList.contains('revealed')) return;
+
+        hint.classList.add('revealed');
+        revealedHints++;
+        hintsCountEl.textContent = `${revealedHints} / ${totalHints} revealed`;
+        hintsProgressFill.style.width = `${(revealedHints / totalHints) * 100}%`;
+
+        // Unlock next hint
+        const next = document.querySelector(`.hint[data-hint="${idx + 1}"]`);
+        if (next) next.classList.remove('locked');
+      });
+    });
+    hintsCountEl.textContent = `0 / ${totalHints} revealed`;
+    hintsProgressFill.style.width = '0%';
+  }
 
   // ===== State =====
   let state = {
@@ -344,14 +374,7 @@
     if (value >= 1 && value <= 1.001) cell.classList.add('full');
   }
 
-  // ===== Algorithm Step Highlighting =====
-  function setAlgoStep(idx) {
-    algoSteps.forEach((el, i) => {
-      el.classList.remove('active', 'done');
-      if (i < idx) el.classList.add('done');
-      if (i === idx) el.classList.add('active');
-    });
-  }
+
 
   // ===== Result Display =====
   function updateResult() {
@@ -382,7 +405,6 @@
     renderPyramid();
     renderDpTable();
     updateResult();
-    setAlgoStep(-1);
     currentRowDisplay.textContent = '—';
     showPouringStream(false);
 
@@ -396,7 +418,6 @@
       // Done
       state.isPlaying = false;
       btnPour.querySelector('.btn__icon').textContent = '▶';
-      setAlgoStep(3);
       showPouringStream(false);
       updateResult();
       return false;
@@ -409,7 +430,6 @@
       // Initialize
       simulateFull();
       state.displayDp[0][0] = state.poured;
-      setAlgoStep(0);
       showPouringStream(true);
       updateGlassFill(0, 0, Math.min(1, state.poured));
       updateDpCell(0, 0, state.poured);
@@ -420,7 +440,6 @@
     }
 
     // Process overflow from previous row
-    setAlgoStep(row === 1 ? 1 : 2);
     currentRowDisplay.textContent = `Row ${row}`;
     highlightRow(row);
 
@@ -592,5 +611,6 @@
 
   // ===== Init =====
   syncControls();
+  initHints();
   resetState();
 })();

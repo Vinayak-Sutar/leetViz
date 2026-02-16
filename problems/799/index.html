@@ -132,36 +132,51 @@
         </svg>
       </section>
 
-      <!-- Algorithm Panel -->
+      <!-- Hints Panel -->
       <aside class="panel algo-panel">
-        <h2 class="panel__title">Algorithm</h2>
-        <div class="algo-steps">
-          <div class="algo-step" id="algoStep0">
-            <div class="algo-step__num">1</div>
-            <div class="algo-step__text">
-              Initialize <code>dp[0][0] = poured</code>
-            </div>
+        <h2 class="panel__title">Hints</h2>
+        <div class="hints-progress">
+          <span id="hintsCount">0 / 5 revealed</span>
+          <div class="hints-progress__bar">
+            <div class="hints-progress__fill" id="hintsProgressFill"></div>
           </div>
-          <div class="algo-step" id="algoStep1">
-            <div class="algo-step__num">2</div>
-            <div class="algo-step__text">
-              For each glass <code>(i, j)</code>, compute overflow:
-              <code class="block">overflow = max(0, dp[i][j] - 1)</code>
-            </div>
+        </div>
+        <div class="hints-container" id="hintsContainer">
+          <div class="hint" data-hint="0">
+            <div class="hint__num">1</div>
+            <div class="hint__text">Watch what happens when you pour more than 1 cup into the top glass. Where does the
+              extra liquid go?</div>
+            <div class="hint__blur"><span class="hint__blur-icon">🔒</span><span class="hint__blur-label">Click to
+                reveal</span></div>
           </div>
-          <div class="algo-step" id="algoStep2">
-            <div class="algo-step__num">3</div>
-            <div class="algo-step__text">
-              Distribute overflow equally:
-              <code class="block">dp[i+1][j] += overflow / 2</code>
-              <code class="block">dp[i+1][j+1] += overflow / 2</code>
-            </div>
+          <div class="hint locked" data-hint="1">
+            <div class="hint__num">2</div>
+            <div class="hint__text">Each glass has a maximum capacity of <strong>1 cup</strong>. Any excess overflows
+              <em>equally</em> to the two glasses directly below it.</div>
+            <div class="hint__blur"><span class="hint__blur-icon">🔒</span><span class="hint__blur-label">Click to
+                reveal</span></div>
           </div>
-          <div class="algo-step" id="algoStep3">
-            <div class="algo-step__num">4</div>
-            <div class="algo-step__text">
-              Answer = <code>min(1, dp[row][glass])</code>
-            </div>
+          <div class="hint locked" data-hint="2">
+            <div class="hint__num">3</div>
+            <div class="hint__text">Think of this <strong>row by row</strong> — process each row completely before
+              moving on. The top glass gets all the poured liquid first.</div>
+            <div class="hint__blur"><span class="hint__blur-icon">🔒</span><span class="hint__blur-label">Click to
+                reveal</span></div>
+          </div>
+          <div class="hint locked" data-hint="3">
+            <div class="hint__num">4</div>
+            <div class="hint__text">Use a 2D table to track how much liquid <em>flows into</em> each glass (not just
+              what stays). Overflow from glass <code>(i, j)</code> adds to <code>(i+1, j)</code> and
+              <code>(i+1, j+1)</code>.</div>
+            <div class="hint__blur"><span class="hint__blur-icon">🔒</span><span class="hint__blur-label">Click to
+                reveal</span></div>
+          </div>
+          <div class="hint locked" data-hint="4">
+            <div class="hint__num">5</div>
+            <div class="hint__text">The answer for any glass is <code>min(1, dp[row][glass])</code> — each glass can
+              hold at most 1 cup, and the overflow formula is <code>(dp[i][j] - 1) / 2</code> for each child.</div>
+            <div class="hint__blur"><span class="hint__blur-icon">🔒</span><span class="hint__blur-label">Click to
+                reveal</span></div>
           </div>
         </div>
 

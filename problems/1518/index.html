@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Bottles - LeetCode 1518</title>
+    <link rel="stylesheet" href="../../shared/theme.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="header__brand">
+                <span class="header__icon">💧</span>
+                <h1 class="header__title">Water Bottles</h1>
+                <span class="header__badge">LeetCode #1518</span>
+            </div>
+            <p class="header__subtitle">Visualize bottle exchanges and maximize water consumption</p>
+        </header>
+
+        <main class="main">
+            <!-- Controls Panel -->
+            <div class="panel controls-panel">
+                <h2 class="panel__title">Controls</h2>
+                
+                <!-- Input Controls -->
+                <div class="control-group">
+                    <label class="control-label">
+                        <span>Initial Bottles</span>
+                        <span class="control-value" id="numBottlesValue">9</span>
+                    </label>
+                    <input type="range" id="numBottlesSlider" class="slider" min="1" max="50" value="9">
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">
+                        <span>Exchange Rate</span>
+                        <span class="control-value" id="numExchangeValue">3</span>
+                    </label>
+                    <input type="range" id="numExchangeSlider" class="slider" min="2" max="20" value="3">
+                </div>
+
+                <!-- Speed Control -->
+                <div class="control-group">
+                    <label class="control-label">
+                        <span>Animation Speed</span>
+                        <span class="control-value" id="speedValue">1×</span>
+                    </label>
+                    <input type="range" id="speedSlider" class="slider" min="1" max="5" value="1">
+                </div>
+
+                <!-- Preset Examples -->
+                <h3 class="panel__subtitle">Example Test Cases</h3>
+                <div class="button-row">
+                    <button class="btn btn--secondary" id="example1Btn">
+                        <span class="btn__icon">📝</span>
+                        <span>9, 3</span>
+                    </button>
+                    <button class="btn btn--secondary" id="example2Btn">
+                        <span class="btn__icon">📝</span>
+                        <span>15, 4</span>
+                    </button>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="button-row">
+                    <button class="btn btn--primary" id="playBtn">
+                        <span class="btn__icon">▶️</span>
+                        <span>Play</span>
+                    </button>
+                    <button class="btn btn--secondary" id="stepBtn">
+                        <span class="btn__icon">⏭️</span>
+                        <span>Step</span>
+                    </button>
+                    <button class="btn btn--ghost" id="resetBtn">
+                        <span class="btn__icon">↺</span>
+                        <span>Reset</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Visualization Area -->
+            <div class="panel viz-panel">
+                <h2 class="panel__title">Visualization</h2>
+                
+                <!-- Step Info -->
+                <div class="step-info">
+                    <span class="step-info__label">Current Step</span>
+                    <span class="step-info__value" id="currentStep">0</span>
+                </div>
+
+                <!-- Bottles Display -->
+                <div class="bottles-container" id="bottlesContainer">
+                    <div class="bottles-section">
+                        <h3 class="bottles-section__title">Full Bottles</h3>
+                        <div class="bottles-grid" id="fullBottles"></div>
+                        <div class="bottles-count" id="fullCount">0</div>
+                    </div>
+                    <div class="exchange-arrow">
+                        <span class="arrow-icon">→</span>
+                        <span class="exchange-text" id="exchangeText">Exchange</span>
+                    </div>
+                    <div class="bottles-section">
+                        <h3 class="bottles-section__title">Empty Bottles</h3>
+                        <div class="bottles-grid" id="emptyBottles"></div>
+                        <div class="bottles-count" id="emptyCount">0</div>
+                    </div>
+                </div>
+
+                <!-- Action Description -->
+                <div class="action-description" id="actionDescription">
+                    Click Play or Step to begin!
+                </div>
+
+                <!-- Result Card -->
+                <div class="result-card" id="resultCard" style="display: none;">
+                    <div class="result-card__label">Total Bottles Drunk</div>
+                    <div class="result-card__value" id="resultValue">0</div>
+                    <div class="result-card__bar-track">
+                        <div class="result-card__bar-fill" id="resultBar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hints Panel -->
+            <div class="panel hints-panel">
+                <h2 class="panel__title">Hints</h2>
+                
+                <!-- Progress Indicator -->
+                <div class="hints-progress">
+                    <span id="hintsProgress">0 / 5 revealed</span>
+                    <div class="hints-progress__bar">
+                        <div class="hints-progress__fill" id="hintsProgressBar"></div>
+                    </div>
+                </div>
+
+                <div class="hints-container">
+                    <!-- Hint 1 -->
+                    <div class="hint" data-hint="1">
+                        <div class="hint__num">1</div>
+                        <div class="hint__text">
+                            Think about the process: you drink all bottles, then exchange empties for new full ones. This process continues until you can't exchange anymore.
+                        </div>
+                        <div class="hint__blur">
+                            <span class="hint__blur-icon">👁️</span>
+                            <span class="hint__blur-label">Click to reveal</span>
+                        </div>
+                    </div>
+
+                    <!-- Hint 2 -->
+                    <div class="hint locked" data-hint="2">
+                        <div class="hint__num">2</div>
+                        <div class="hint__text">
+                            The key insight: after drinking <code>n</code> bottles, you have <code>n</code> empty bottles. How many full bottles can you get by exchanging them?
+                        </div>
+                        <div class="hint__blur">
+                            <span class="hint__blur-icon">🔒</span>
+                            <span class="hint__blur-label">Reveal hint 1 first</span>
+                        </div>
+                    </div>
+
+                    <!-- Hint 3 -->
+                    <div class="hint locked" data-hint="3">
+                        <div class="hint__num">3</div>
+                        <div class="hint__text">
+                            Use integer division: <code>emptyBottles / numExchange</code> gives you new full bottles. But don't forget the remainder — those empty bottles carry over!
+                        </div>
+                        <div class="hint__blur">
+                            <span class="hint__blur-icon">🔒</span>
+                            <span class="hint__blur-label">Reveal hint 2 first</span>
+                        </div>
+                    </div>
+
+                    <!-- Hint 4 -->
+                    <div class="hint locked" data-hint="4">
+                        <div class="hint__num">4</div>
+                        <div class="hint__text">
+                            Simulate step by step:
+                            <code class="block">1. totalDrunk = numBottles</code>
+                            <code class="block">2. emptyBottles = numBottles</code>
+                            <code class="block">3. While emptyBottles >= numExchange: exchange and drink more</code>
+                        </div>
+                        <div class="hint__blur">
+                            <span class="hint__blur-icon">🔒</span>
+                            <span class="hint__blur-label">Reveal hint 3 first</span>
+                        </div>
+                    </div>
+
+                    <!-- Hint 5 -->
+                    <div class="hint locked" data-hint="5">
+                        <div class="hint__num">5</div>
+                        <div class="hint__text">
+                            Complete algorithm:
+                            <code class="block">newFull = emptyBottles / numExchange</code>
+                            <code class="block">emptyBottles = emptyBottles % numExchange + newFull</code>
+                            <code class="block">totalDrunk += newFull</code>
+                            Repeat until emptyBottles &lt; numExchange.
+                        </div>
+                        <div class="hint__blur">
+                            <span class="hint__blur-icon">🔒</span>
+                            <span class="hint__blur-label">Reveal hint 4 first</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

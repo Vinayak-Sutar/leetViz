@@ -49,7 +49,21 @@ Use this prompt with any LLM (ChatGPT, Claude, Gemini, etc.) to generate a compl
 > The `<main>` should have:
 > 1. **Controls panel** (`.panel` class) — sliders, inputs, preset examples, Play/Step/Reset buttons
 > 2. **Visualization area** — the core animation (Canvas, SVG, or DOM-based)
-> 3. **Algorithm panel** (`.panel` class) — step-by-step algorithm breakdown with `.algo-step` items
+> 3. **Hints panel** (`.panel` class) — progressive, problem-specific hints (NOT algorithm steps)
+>
+> #### Hints Panel (REQUIRED):
+> - Title: "Hints" (not "Algorithm")
+> - Include a **progress indicator** showing "X / N revealed"
+> - Provide **5 hints** in increasing order of specificity:
+>   - Hint 1: A gentle observation or analogy ("Think about what happens when...")
+>   - Hint 2: A key insight about the problem structure
+>   - Hint 3: A specific technique or data structure to consider
+>   - Hint 4: The approach broken down into sub-steps
+>   - Hint 5: The implementation-level detail (pseudocode or formula)
+> - Each hint must be **blurred by default** and revealed on click
+> - Hints unlock **sequentially** — hint N must be revealed before hint N+1 becomes clickable
+> - Use the theme's `.hint`, `.hint__num`, `.hint__text`, `.hint__blur` classes
+> - **DO NOT** show the full algorithm — this is a learning tool, not a cheat sheet
 >
 > #### 2. `style.css`
 > - **DO NOT** redefine variables already in `theme.css` (fonts, colors, radii, etc.)
@@ -70,11 +84,10 @@ Use this prompt with any LLM (ChatGPT, Claude, Gemini, etc.) to generate a compl
 > - Wrap everything in an IIFE: `(() => { 'use strict'; ... })()`
 > - No external libraries — vanilla JS only
 > - **Required features:**
->   - **Play button**: Auto-advance through all algorithm steps with animation
+>   - **Play button**: Auto-advance through all visualization steps with animation
 >   - **Step button**: Manually advance one step at a time
 >   - **Reset button**: Return to initial state
 >   - **Speed control**: Slider to adjust animation speed (1× to 5×)
->   - **Algorithm step highlighting**: Highlight the current step in the algo panel
 >   - **Input controls**: Let users change inputs and see different cases
 >   - **Preset examples**: LeetCode example test cases as one-click buttons
 >
@@ -92,7 +105,7 @@ Use this prompt with any LLM (ChatGPT, Claude, Gemini, etc.) to generate a compl
 >
 > ### DESIGN GUIDELINES
 > - Use the theme classes: `.panel`, `.btn`, `.btn--primary`, `.btn--secondary`, `.btn--ghost`,
->   `.slider`, `.control-group`, `.control-label`, `.algo-step`, `.result-card`, etc.
+>   `.slider`, `.control-group`, `.control-label`, `.hint`, `.result-card`, etc.
 > - Dark theme with your chosen accent color
 > - Smooth animations with CSS transitions and `requestAnimationFrame`
 > - Responsive — should work in a Chrome side panel (320px wide) and full screen
@@ -100,11 +113,11 @@ Use this prompt with any LLM (ChatGPT, Claude, Gemini, etc.) to generate a compl
 >   what's being compared/moved/computed at each step
 >
 > ### QUALITY CHECKLIST
-> - [ ] Correct algorithm implementation (verify with LeetCode examples)
+> - [ ] Correct implementation (verify with LeetCode examples)
 > - [ ] All three buttons (Play/Step/Reset) work correctly
 > - [ ] Speed slider affects animation speed
 > - [ ] At least 2 preset examples from LeetCode
-> - [ ] Algorithm steps highlight correctly during execution
+> - [ ] Hints panel with 5 progressive, problem-specific hints
 > - [ ] Smooth animations, no jank
 > - [ ] No console errors
 > - [ ] Works in a narrow side panel view

@@ -558,82 +558,27 @@ body::before {
     color: var(--text-primary);
 }
 
-/* ===== Algorithm Panel ===== */
-.algo-panel {
-    max-height: calc(100vh - 140px);
-    overflow-y: auto;
-}
-
-.algo-steps {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1.25rem;
-}
-
-.algo-step {
-    display: flex;
-    gap: 0.6rem;
-    padding: 0.45rem 0.6rem;
-    border-radius: var(--radius-sm);
-    border: 1px solid transparent;
-    transition: all var(--transition-med);
-}
-
-.algo-step.active {
-    background: var(--cyan-bg);
-    border-color: var(--bg-panel-border);
-}
-
-.algo-step__num {
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.6rem;
-    font-weight: 700;
-    border-radius: 50%;
-    background: var(--bg-glass);
-    color: var(--text-muted);
-    transition: all var(--transition-med);
-}
-
-.algo-step.active .algo-step__num {
-    background: var(--cyan);
-    color: #06080d;
-}
-
-.algo-step.done .algo-step__num {
+/* ===== Hints Panel Overrides ===== */
+.hint.revealed .hint__num {
     background: rgba(0, 210, 255, 0.2);
     color: var(--cyan);
 }
 
-.algo-step__text {
-    font-size: 0.75rem;
-    line-height: 1.5;
-    color: var(--text-secondary);
-    transition: color var(--transition-med);
+.hint:hover:not(.revealed) {
+    border-color: var(--cyan);
+    background: var(--cyan-bg);
 }
 
-.algo-step.active .algo-step__text {
+.hint.revealed .hint__text {
     color: var(--text-primary);
 }
 
-.algo-step__text code {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    background: var(--bg-glass);
-    padding: 0.1rem 0.35rem;
-    border-radius: 4px;
+.hint__text code {
     color: var(--cyan-light);
 }
 
-.algo-step__text code.block {
-    display: block;
-    margin-top: 0.25rem;
-    padding: 0.25rem 0.5rem;
+.hints-progress__fill {
+    background: var(--cyan);
 }
 
 /* Result Card */

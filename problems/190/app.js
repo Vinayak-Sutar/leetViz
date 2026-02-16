@@ -31,7 +31,37 @@
   const finalHex = $('#finalHex');
   const finalBin = $('#finalBin');
 
-  const algoSteps = [0, 1, 2, 3, 4, 5].map(i => $(`#algoStep${i}`));
+  // ===== Hints System =====
+  const hintsContainer = $('#hintsContainer');
+  const hintsCountEl = $('#hintsCount');
+  const hintsProgressFill = $('#hintsProgressFill');
+  let revealedHints = 0;
+  const totalHints = 5;
+
+  function initHints() {
+    revealedHints = 0;
+    document.querySelectorAll('.hint').forEach((hint, i) => {
+      hint.classList.remove('revealed');
+      if (i > 0) hint.classList.add('locked');
+      else hint.classList.remove('locked');
+
+      hint.addEventListener('click', () => {
+        const idx = parseInt(hint.dataset.hint);
+        if (hint.classList.contains('locked') || hint.classList.contains('revealed')) return;
+
+        hint.classList.add('revealed');
+        revealedHints++;
+        hintsCountEl.textContent = `${revealedHints} / ${totalHints} revealed`;
+        hintsProgressFill.style.width = `${(revealedHints / totalHints) * 100}%`;
+
+        // Unlock next hint
+        const next = document.querySelector(`.hint[data-hint="${idx + 1}"]`);
+        if (next) next.classList.remove('locked');
+      });
+    });
+    hintsCountEl.textContent = `0 / ${totalHints} revealed`;
+    hintsProgressFill.style.width = '0%';
+  }
 
   // ===== State =====
   let state = {
@@ -183,14 +213,7 @@
     arrowPath.setAttribute('d', '');
   }
 
-  // ===== Algo Step Highlighting =====
-  function setAlgoStep(idx) {
-    algoSteps.forEach((el, i) => {
-      el.classList.remove('active', 'done');
-      if (i < idx) el.classList.add('done');
-      if (i === idx) el.classList.add('active');
-    });
-  }
+
 
   // ===== Operations Panel =====
   function clearOps() {
@@ -234,7 +257,6 @@
     if (state.step >= 32) {
       state.isPlaying = false;
       btnPlay.querySelector('.btn__icon').textContent = '▶';
-      setAlgoStep(5); // Return result
       stepDetailEl.textContent = 'Done! Result is ready.';
       clearArrow();
       // Clear active highlights
@@ -263,9 +285,6 @@
     state.step++;
 
     // === Visual updates ===
-    const stepAlgo = curStep === 0 ? 2 : 2; // always show step 2a/2b/2c
-    setAlgoStep(2); // highlight the loop body
-
     // Step info
     stepNumEl.textContent = state.step;
     const fromBitPos = curStep; // LSB position in original
@@ -305,7 +324,6 @@
     renderResultBits();
     clearArrow();
     clearOps();
-    setAlgoStep(0);
     updateResultCard();
 
     stepNumEl.textContent = '—';
@@ -408,5 +426,6 @@
   });
 
   // ===== Init =====
+  initHints();
   resetState();
 })();
