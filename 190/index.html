@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reverse Bits Visualizer — LeetCode #190</title>
+    <meta name="description"
+        content="Interactive visualizer for the Reverse Bits problem (LeetCode #190). Watch bits reverse step-by-step with animated binary representation." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header__brand">
+                <span class="header__icon">🔄</span>
+                <h1 class="header__title">Reverse Bits</h1>
+                <span class="header__badge">LeetCode #190</span>
+            </div>
+            <p class="header__subtitle">Reverse all 32 bits of an unsigned integer — step by step</p>
+        </header>
+
+        <main class="main">
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="panel input-panel">
+                    <h2 class="panel__title">Input</h2>
+                    <div class="control-group">
+                        <label class="control-label" for="decimalInput">Decimal Value</label>
+                        <input type="number" id="decimalInput" class="text-input" min="0" max="4294967295"
+                            value="43261596" placeholder="Enter unsigned 32-bit integer" />
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="binaryInput">Binary (32-bit)</label>
+                        <input type="text" id="binaryInput" class="text-input mono" maxlength="39"
+                            value="00000010100101000001111010011100" placeholder="Enter 32-bit binary" />
+                    </div>
+                    <div class="preset-row">
+                        <span class="preset-label">Examples:</span>
+                        <button class="preset-btn" data-value="43261596">43261596</button>
+                        <button class="preset-btn" data-value="4294967293">4294967293</button>
+                        <button class="preset-btn" data-value="21">21</button>
+                        <button class="preset-btn" data-value="0">0</button>
+                        <button class="preset-btn" data-value="4294967295">2³² − 1</button>
+                    </div>
+                    <div class="button-row">
+                        <button id="btnPlay" class="btn btn--primary">
+                            <span class="btn__icon">▶</span> Play
+                        </button>
+                        <button id="btnStep" class="btn btn--secondary">
+                            <span class="btn__icon">⏭</span> Step
+                        </button>
+                        <button id="btnReset" class="btn btn--ghost">
+                            <span class="btn__icon">↺</span> Reset
+                        </button>
+                    </div>
+                    <div class="control-group" style="margin-top:0.5rem">
+                        <label class="control-label" for="speedSlider">
+                            Speed
+                            <span class="control-value" id="speedValue">2×</span>
+                        </label>
+                        <input type="range" id="speedSlider" class="slider" min="1" max="5" step="1" value="2" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Visualization Section -->
+            <section class="viz-section">
+                <!-- Original bits -->
+                <div class="bit-strip-container">
+                    <div class="bit-strip-label">
+                        <span class="bit-strip-label__text">Input <code>n</code></span>
+                        <span class="bit-strip-label__dec" id="inputDecLabel">43261596</span>
+                    </div>
+                    <div class="bit-strip" id="inputBits"></div>
+                    <div class="bit-indices" id="inputIndices"></div>
+                </div>
+
+                <!-- Arrow area showing which bit is being transferred -->
+                <div class="transfer-area" id="transferArea">
+                    <div class="transfer-arrow" id="transferArrow">
+                        <svg class="arrow-svg" viewBox="0 0 100 80" preserveAspectRatio="none">
+                            <defs>
+                                <marker id="arrowHead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                                    <polygon points="0 0, 8 3, 0 6" fill="var(--cyan)" />
+                                </marker>
+                            </defs>
+                            <path id="arrowPath" d="" stroke="var(--cyan)" stroke-width="2" fill="none"
+                                marker-end="url(#arrowHead)" />
+                        </svg>
+                    </div>
+                    <div class="transfer-info" id="transferInfo">
+                        <span class="transfer-info__step">Step <span id="stepNum">—</span>/32</span>
+                        <span class="transfer-info__detail" id="stepDetail">Press Play or Step to begin</span>
+                    </div>
+                </div>
+
+                <!-- Result bits -->
+                <div class="bit-strip-container">
+                    <div class="bit-strip-label">
+                        <span class="bit-strip-label__text">Result</span>
+                        <span class="bit-strip-label__dec" id="resultDecLabel">—</span>
+                    </div>
+                    <div class="bit-strip" id="resultBits"></div>
+                    <div class="bit-indices" id="resultIndices"></div>
+                </div>
+
+                <!-- Operation breakdown -->
+                <div class="ops-panel" id="opsPanel">
+                    <div class="ops-row" id="opsExtract">
+                        <span class="ops-label">Extract LSB</span>
+                        <code class="ops-code" id="opsExtractCode">—</code>
+                    </div>
+                    <div class="ops-row" id="opsShiftResult">
+                        <span class="ops-label">Left-shift result</span>
+                        <code class="ops-code" id="opsShiftResultCode">—</code>
+                    </div>
+                    <div class="ops-row" id="opsOr">
+                        <span class="ops-label">OR bit into result</span>
+                        <code class="ops-code" id="opsOrCode">—</code>
+                    </div>
+                    <div class="ops-row" id="opsShiftN">
+                        <span class="ops-label">Right-shift n</span>
+                        <code class="ops-code" id="opsShiftNCode">—</code>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Algorithm Panel -->
+            <section class="panel algo-panel">
+                <h2 class="panel__title">Algorithm</h2>
+                <div class="algo-steps">
+                    <div class="algo-step" id="algoStep0">
+                        <div class="algo-step__num">1</div>
+                        <div class="algo-step__text">Initialize <code>result = 0</code></div>
+                    </div>
+                    <div class="algo-step" id="algoStep1">
+                        <div class="algo-step__num">2</div>
+                        <div class="algo-step__text">
+                            Loop 32 times (for each bit):
+                        </div>
+                    </div>
+                    <div class="algo-step" id="algoStep2">
+                        <div class="algo-step__num">2a</div>
+                        <div class="algo-step__text">
+                            Left-shift result:
+                            <code class="block">result &lt;&lt;= 1</code>
+                        </div>
+                    </div>
+                    <div class="algo-step" id="algoStep3">
+                        <div class="algo-step__num">2b</div>
+                        <div class="algo-step__text">
+                            Extract LSB & add to result:
+                            <code class="block">result |= (n & 1)</code>
+                        </div>
+                    </div>
+                    <div class="algo-step" id="algoStep4">
+                        <div class="algo-step__num">2c</div>
+                        <div class="algo-step__text">
+                            Right-shift n:
+                            <code class="block">n &gt;&gt;&gt;= 1</code>
+                        </div>
+                    </div>
+                    <div class="algo-step" id="algoStep5">
+                        <div class="algo-step__num">3</div>
+                        <div class="algo-step__text">Return <code>result</code></div>
+                    </div>
+                </div>
+
+                <!-- Result summary -->
+                <div class="result-card" id="resultCard">
+                    <div class="result-card__label">Final Answer</div>
+                    <div class="result-card__row">
+                        <span class="result-card__key">Decimal</span>
+                        <span class="result-card__val mono" id="finalDec">—</span>
+                    </div>
+                    <div class="result-card__row">
+                        <span class="result-card__key">Hex</span>
+                        <span class="result-card__val mono" id="finalHex">—</span>
+                    </div>
+                    <div class="result-card__row">
+                        <span class="result-card__key">Binary</span>
+                        <span class="result-card__val mono small" id="finalBin">—</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

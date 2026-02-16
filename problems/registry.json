@@ -1,0 +1,14 @@
+{
+  "problems": {
+    "190": {
+      "title": "Reverse Bits",
+      "difficulty": "easy",
+      "tags": ["bit-manipulation"]
+    },
+    "799": {
+      "title": "Champagne Tower",
+      "difficulty": "medium",
+      "tags": ["dynamic-programming", "simulation"]
+    }
+  }
+}

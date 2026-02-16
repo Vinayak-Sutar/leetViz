@@ -1,0 +1,11 @@
+{
+    "id": 799,
+    "title": "Champagne Tower",
+    "difficulty": "medium",
+    "tags": [
+        "dynamic-programming",
+        "simulation"
+    ],
+    "author": "Vinayak-Sutar",
+    "description": "Watch champagne cascade through a pyramid of glasses with step-by-step DP animation."
+}

@@ -1,0 +1,46 @@
+{
+    "manifest_version": 3,
+    "name": "LeetViz",
+    "version": "1.0.0",
+    "description": "Interactive visualizers for LeetCode problems — powered by the community.",
+    "permissions": [
+        "activeTab",
+        "sidePanel",
+        "storage"
+    ],
+    "icons": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    },
+    "side_panel": {
+        "default_path": "sidepanel.html"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://leetcode.com/problems/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "css": [
+                "content.css"
+            ],
+            "run_at": "document_idle"
+        }
+    ],
+    "action": {
+        "default_icon": {
+            "16": "icons/icon16.png",
+            "48": "icons/icon48.png"
+        },
+        "default_title": "Open LeetViz"
+    },
+    "host_permissions": [
+        "https://vinayak-sutar.github.io/*"
+    ]
+}

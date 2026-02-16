@@ -1,0 +1,10 @@
+{
+    "id": 190,
+    "title": "Reverse Bits",
+    "difficulty": "easy",
+    "tags": [
+        "bit-manipulation"
+    ],
+    "author": "Vinayak-Sutar",
+    "description": "Reverse all 32 bits of an unsigned integer with animated step-by-step bit transfer."
+}

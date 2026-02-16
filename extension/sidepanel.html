@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LeetViz</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+</head>
+
+<body>
+    <div class="sp" id="app">
+        <!-- Header -->
+        <header class="sp-header">
+            <div class="sp-header__brand">
+                <svg class="sp-header__logo" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12h5l3-9 4 18 3-9h5" />
+                </svg>
+                <span class="sp-header__title">LeetViz</span>
+            </div>
+            <div class="sp-header__problem" id="problemBadge">—</div>
+        </header>
+
+        <!-- Loading state -->
+        <div class="sp-state sp-loading" id="stateLoading">
+            <div class="sp-spinner"></div>
+            <p>Detecting problem…</p>
+        </div>
+
+        <!-- Visualizer iframe -->
+        <div class="sp-state sp-viz" id="stateViz" style="display:none;">
+            <iframe id="vizFrame" class="sp-iframe" sandbox="allow-scripts allow-same-origin"
+                title="Visualizer"></iframe>
+        </div>
+
+        <!-- Not found state -->
+        <div class="sp-state sp-notfound" id="stateNotFound" style="display:none;">
+            <div class="sp-notfound__icon">🧩</div>
+            <h2 class="sp-notfound__title">No Visualizer Yet</h2>
+            <p class="sp-notfound__desc">
+                Problem <strong id="notfoundNumber">#—</strong> doesn't have a community visualizer yet.
+            </p>
+            <div class="sp-notfound__actions">
+                <a href="https://github.com/Vinayak-Sutar/leetViz/blob/main/PROMPT.md" target="_blank"
+                    class="sp-btn sp-btn--primary">
+                    Build One with AI
+                </a>
+                <a href="https://github.com/Vinayak-Sutar/leetViz/blob/main/CONTRIBUTING.md" target="_blank"
+                    class="sp-btn sp-btn--ghost">
+                    Contribution Guide
+                </a>
+            </div>
+            <p class="sp-notfound__hint">
+                Use the <strong>PROMPT.md</strong> to generate a visualizer with any LLM, then submit a PR!
+            </p>
+        </div>
+
+        <!-- Error state -->
+        <div class="sp-state sp-error" id="stateError" style="display:none;">
+            <div class="sp-notfound__icon">⚠️</div>
+            <h2 class="sp-notfound__title">Connection Error</h2>
+            <p class="sp-notfound__desc" id="errorMsg">Could not reach the LeetViz registry.</p>
+            <button class="sp-btn sp-btn--primary" id="retryBtn">Retry</button>
+        </div>
+
+        <!-- Not on problem page -->
+        <div class="sp-state sp-noproblem" id="stateNoProblem" style="display:none;">
+            <div class="sp-notfound__icon">📄</div>
+            <h2 class="sp-notfound__title">Navigate to a Problem</h2>
+            <p class="sp-notfound__desc">
+                Open any LeetCode problem page to see if a visualizer is available.
+            </p>
+        </div>
+    </div>
+
+    <script src="sidepanel.js"></script>
+</body>
+
+</html>
