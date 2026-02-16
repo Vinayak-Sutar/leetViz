@@ -102,14 +102,23 @@ chrome.action.onClicked.addListener((tab) => {
   chrome.sidePanel.open({ tabId: tab.id });
 });
 
-// ===== Enable side panel on LeetCode tabs =====
+// ===== Enable/disable side panel based on tab URL =====
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (tab.url && tab.url.includes('leetcode.com/problems/')) {
+  if (!tab.url) return;
+
+  if (tab.url.includes('leetcode.com/problems/')) {
     chrome.sidePanel.setOptions({
       tabId,
       path: 'sidepanel.html',
       enabled: true,
     });
+  } else {
+    // Disable side panel on non-LeetCode tabs so it auto-hides
+    chrome.sidePanel.setOptions({
+      tabId,
+      enabled: false,
+    });
+    tabProblems.delete(tabId);
   }
 });
 
@@ -125,5 +134,14 @@ chrome.tabs.onActivated.addListener(({ tabId }) => {
     chrome.storage.local.set({
       currentProblem: { ...problem, tabId, timestamp: Date.now() }
     });
+  } else {
+    // Switching to a non-LeetCode tab — tell side panel to clear
+    chrome.storage.local.set({
+      currentProblem: { slug: null, number: null, tabId, timestamp: Date.now() }
+    });
+    chrome.runtime.sendMessage({
+      type: 'PROBLEM_CHANGED',
+      problem: null
+    }).catch(() => {});
   }
 });

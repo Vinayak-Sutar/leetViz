@@ -160,18 +160,26 @@
           registryCache = null; // Force fresh registry lookup
           loadProblem(newVal);
         }
+      } else {
+        // No problem — switched to non-LeetCode tab
+        currentLoadedNumber = null;
+        showState(stateNoProblem);
       }
     }
   });
 
   // ===== Backup: direct message from background (more reliable than storage) =====
   chrome.runtime.onMessage.addListener((msg) => {
-    if (msg.type === 'PROBLEM_CHANGED' && msg.problem) {
+    if (msg.type === 'PROBLEM_CHANGED') {
       console.log('[LeetViz SP] Direct message received:', msg.problem);
 
-      if (msg.problem.number && msg.problem.number !== currentLoadedNumber) {
+      if (msg.problem && msg.problem.number && msg.problem.number !== currentLoadedNumber) {
         registryCache = null; // Force fresh registry lookup
         loadProblem(msg.problem);
+      } else if (!msg.problem) {
+        // Switched to non-LeetCode tab
+        currentLoadedNumber = null;
+        showState(stateNoProblem);
       }
     }
   });
