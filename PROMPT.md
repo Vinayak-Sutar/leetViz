@@ -1,6 +1,6 @@
-# LeetViz — LLM Prompt Template for Visualizer Contributors
+# LeetViz — AI Prompt Template for Visualizer Contributors
 
-Use this prompt with any LLM (ChatGPT, Claude, Gemini, etc.) to generate a complete visualizer for a LeetCode problem. Copy the entire prompt below — including the format specs — and fill in the problem details.
+Use this prompt with any LLM (ChatGPT, Claude, Gemini, etc.) or AI-powered IDE (Antigravity, Cursor, Windsurf, GitHub Copilot, etc.) to generate a complete visualizer for a LeetCode problem. Copy the entire prompt below — including the format specs — and fill in the problem details.
 
 ---
 
