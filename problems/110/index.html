@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Balanced Binary Tree Visualizer — LeetCode #110</title>
+    <meta name="description"
+        content="Interactive visualizer for the Balanced Binary Tree problem (LeetCode #110). Watch DFS compute heights and check balance at every node." />
+    <link rel="stylesheet" href="../../shared/theme.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header__brand">
+                <span class="header__icon">🌳</span>
+                <h1 class="header__title">Balanced Binary Tree</h1>
+                <span class="header__badge">LeetCode #110</span>
+            </div>
+            <p class="header__subtitle">Check if a binary tree is height-balanced — DFS step by step</p>
+        </header>
+
+        <main class="main">
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="panel input-panel">
+                    <h2 class="panel__title">Input</h2>
+                    <div class="control-group">
+                        <label class="control-label" for="treeInput">Tree (level-order)</label>
+                        <input type="text" id="treeInput" class="text-input mono" value="3,9,20,null,null,15,7"
+                            placeholder="e.g. 3,9,20,null,null,15,7" />
+                    </div>
+                    <div class="preset-row">
+                        <span class="preset-label">Examples:</span>
+                        <button class="preset-btn" data-value="3,9,20,null,null,15,7">Balanced</button>
+                        <button class="preset-btn" data-value="1,2,2,3,3,null,null,4,4">Unbalanced</button>
+                        <button class="preset-btn" data-value="">Empty</button>
+                        <button class="preset-btn" data-value="1">Single</button>
+                        <button class="preset-btn" data-value="1,2,null,3,null,null,null,4">Left-skew</button>
+                    </div>
+                    <div class="button-row">
+                        <button id="btnPlay" class="btn btn--primary">
+                            <span class="btn__icon">▶</span> Play
+                        </button>
+                        <button id="btnStep" class="btn btn--secondary">
+                            <span class="btn__icon">⏭</span> Step
+                        </button>
+                        <button id="btnReset" class="btn btn--ghost">
+                            <span class="btn__icon">↺</span> Reset
+                        </button>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="speedSlider">
+                            Speed: <span id="speedValue">1×</span>
+                        </label>
+                        <input type="range" id="speedSlider" class="slider" min="1" max="5" value="1" step="1" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Visualization Area -->
+            <section class="viz-section">
+                <div class="panel viz-panel">
+                    <h2 class="panel__title">Tree Visualization</h2>
+                    <div id="vizContainer" class="viz-container">
+                        <canvas id="treeCanvas"></canvas>
+                    </div>
+                    <div id="statusBar" class="status-bar">
+                        Click <strong>Play</strong> or <strong>Step</strong> to begin DFS traversal
+                    </div>
+                </div>
+
+                <!-- Result Card -->
+                <div id="resultCard" class="result-card" style="display:none;">
+                    <div class="result-card__label">Result</div>
+                    <div id="resultValue" class="result-card__value">—</div>
+                    <div id="resultDetail" class="result-card__detail"></div>
+                </div>
+            </section>
+
+            <!-- Hints Section -->
+            <section class="hints-section">
+                <div class="panel hints-panel">
+                    <h2 class="panel__title">
+                        Hints
+                        <span class="hints-progress">
+                            <span id="hintsRevealed">0</span> / 5 revealed
+                        </span>
+                    </h2>
+                    <div class="hints-progress-bar">
+                        <div id="hintsProgressFill" class="hints-progress-bar__fill" style="width:0%"></div>
+                    </div>
+                    <div class="hints-list">
+                        <div class="hint" data-hint="1">
+                            <div class="hint__num">1</div>
+                            <div class="hint__text">
+                                Think about what "height" means for a single node vs a subtree. What's the height of a
+                                leaf? What about an empty tree?
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="2">
+                            <div class="hint__num">2</div>
+                            <div class="hint__text">
+                                A tree is balanced if <strong>EVERY</strong> node (not just the root) has left and right
+                                subtrees whose heights differ by at most 1.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="3">
+                            <div class="hint__num">3</div>
+                            <div class="hint__text">
+                                Use <strong>DFS</strong> (post-order traversal): compute the height of left subtree
+                                first, then right, then compare them at the current node.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="4">
+                            <div class="hint__num">4</div>
+                            <div class="hint__text">
+                                You can combine the height computation and balance check: if any subtree is unbalanced,
+                                propagate a special value (like <code>-1</code>) upward to short-circuit.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="5">
+                            <div class="hint__num">5</div>
+                            <div class="hint__text">
+                                <code>height(node)</code>: if node is null return 0.<br>
+                                <code>leftH = height(left)</code>, <code>rightH = height(right)</code>.<br>
+                                If <code>leftH == -1</code> or <code>rightH == -1</code> or
+                                <code>|leftH - rightH| > 1</code>, return <code>-1</code>.<br>
+                                Else return <code>max(leftH, rightH) + 1.</code>
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>

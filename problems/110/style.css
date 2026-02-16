@@ -1,0 +1,215 @@
+/* ===== Balanced Binary Tree (#110) — Custom Styles ===== */
+
+:root {
+    --accent: #10b981;
+    --accent-dark: #059669;
+    --accent-light: #34d399;
+    --accent-glow: rgba(16, 185, 129, 0.25);
+    --accent-bg: rgba(16, 185, 129, 0.06);
+}
+
+/* ===== Layout ===== */
+.main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+}
+
+.input-section,
+.viz-section,
+.hints-section {
+    width: 100%;
+}
+
+/* ===== Input Panel ===== */
+.input-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.text-input {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.text-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.text-input.mono {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+.preset-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.preset-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-right: var(--space-xs);
+}
+
+.preset-btn {
+    padding: 4px 10px;
+    background: var(--accent-bg);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: var(--radius-sm);
+    color: var(--accent-light);
+    font-size: 0.7rem;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.preset-btn:hover {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+}
+
+.button-row {
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+/* ===== Visualization ===== */
+.viz-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.viz-container {
+    position: relative;
+    width: 100%;
+    min-height: 320px;
+    background: var(--bg-primary);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+#treeCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.status-bar {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-align: center;
+    min-height: 2em;
+    line-height: 1.4;
+}
+
+/* ===== Result Card ===== */
+.result-card {
+    margin-top: var(--space-sm);
+    padding: var(--space-md) var(--space-lg);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.result-card__label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: var(--space-xs);
+}
+
+.result-card__value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+.result-card__value.balanced {
+    color: var(--accent-light);
+    text-shadow: 0 0 20px var(--accent-glow);
+}
+
+.result-card__value.unbalanced {
+    color: #f87171;
+    text-shadow: 0 0 20px rgba(248, 113, 113, 0.25);
+}
+
+.result-card__detail {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: var(--space-xs);
+}
+
+/* ===== Hints overrides ===== */
+.hints-panel .hint:hover:not(.locked) {
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.hints-panel .hint.revealed {
+    border-color: rgba(16, 185, 129, 0.15);
+}
+
+.hints-progress-bar__fill {
+    background: linear-gradient(90deg, var(--accent-dark), var(--accent-light));
+}
+
+.hints-panel .hint__num {
+    background: var(--accent-bg);
+    color: var(--accent-light);
+}
+
+/* ===== Animations ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes nodeGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    50% {
+        box-shadow: 0 0 20px var(--accent-glow);
+    }
+}
+
+/* ===== Responsive ===== */
+@media (min-width: 768px) {
+    .main {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+}

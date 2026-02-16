@@ -22,6 +22,15 @@
         "math",
         "simulation"
       ]
+    },
+    "110": {
+      "title": "Balanced Binary Tree",
+      "difficulty": "easy",
+      "tags": [
+        "tree",
+        "depth-first-search",
+        "binary-tree"
+      ]
     }
   }
 }

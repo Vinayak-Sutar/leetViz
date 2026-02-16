@@ -1,0 +1,12 @@
+{
+    "id": 110,
+    "title": "Balanced Binary Tree",
+    "difficulty": "easy",
+    "tags": [
+        "tree",
+        "depth-first-search",
+        "binary-tree"
+    ],
+    "author": "Vinayak-Sutar",
+    "description": "Visualize DFS height computation to determine if a binary tree is height-balanced."
+}
