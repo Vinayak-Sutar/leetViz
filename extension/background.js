@@ -105,15 +105,19 @@ chrome.action.onClicked.addListener((tab) => {
 // ===== Enable/disable side panel based on tab URL =====
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (!tab.url) return;
+  // Only react to URL changes, not every update
+  if (!changeInfo.url && !changeInfo.status) return;
 
-  if (tab.url.includes('leetcode.com/problems/')) {
+  const isLeetCodeProblem = tab.url.includes('leetcode.com/problems/');
+
+  if (isLeetCodeProblem) {
     chrome.sidePanel.setOptions({
       tabId,
       path: 'sidepanel.html',
       enabled: true,
     });
   } else {
-    // Disable side panel on non-LeetCode tabs so it auto-hides
+    // Any non-problem page (other sites OR leetcode.com/explore, /contest, etc.)
     chrome.sidePanel.setOptions({
       tabId,
       enabled: false,
