@@ -52,7 +52,7 @@ LeetCode Problem Page
 
 We want visualizers for **every** LeetCode problem! Here's how:
 
-1. **Use the AI prompt** — Copy [PROMPT.md](PROMPT.md) and paste it into any LLM (ChatGPT, Claude, Gemini) or use an AI-powered IDE (Cursor, Windsurf, GitHub Copilot, etc.) to generate a complete visualizer
+1. **Use the AI prompt** — Copy [PROMPT.md](PROMPT.md) and paste it into any LLM (ChatGPT, Claude, Gemini) or use an AI-powered IDE (Antigravity, Cursor, Windsurf, GitHub Copilot, etc.) to generate a complete visualizer
 2. **Follow the format** — See [CONTRIBUTING.md](CONTRIBUTING.md) for requirements
 3. **Submit a PR** — Add your `problems/<number>/` folder and update `registry.json`
 
@@ -106,6 +106,10 @@ All visualizers share a common dark theme via `shared/theme.css`:
 - **Components:** Panels, buttons, sliders, progressive hints, result cards
 
 Each visualizer overrides `--accent` to get its own identity while maintaining visual consistency.
+
+## 🛠️ Built With
+
+This project was built with the help of [**Antigravity**](https://blog.google/technology/google-deepmind/antigravity-ai-coding/) — an AI coding assistant by Google DeepMind. From the design system and Chrome extension architecture to the progressive hints system, Antigravity pair-programmed the entire codebase.
 
 ## 📄 License
 
