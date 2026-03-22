@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetViz — Interactive Algorithm Visualizers</title>
+    <link rel="stylesheet" href="shared/theme.css">
+    <style>
+        .hero {
+            text-align: center;
+            padding: var(--space-xl) var(--space-md);
+            background: linear-gradient(to bottom, var(--bg-tertiary), var(--bg-primary));
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-sm);
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: var(--space-xl) var(--space-md);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-md);
+            color: var(--text-primary);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-md);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: #3b82f6;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .card-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge.easy { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+        .badge.medium { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+        .badge.hard { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: var(--space-sm);
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        #loading {
+            text-align: center;
+            padding: var(--space-xl);
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <h1>LeetViz</h1>
+        <p>A community-driven collection of interactive, step-by-step visualizations for LeetCode problems. Built to plug cleanly into the Chrome Extension.</p>
+    </header>
+
+    <main class="container">
+        <h2 class="section-title">Available Visualizers (<span id="count">0</span>)</h2>
+        <div id="loading">Loading from registry.json...</div>
+        <div class="grid" id="grid"></div>
+    </main>
+
+    <script>
+        async function fetchProblems() {
+            try {
+                const res = await fetch('problems/registry.json');
+                const data = await res.json();
+                
+                const grid = document.getElementById('grid');
+                const loading = document.getElementById('loading');
+                const count = document.getElementById('count');
+                
+                loading.style.display = 'none';
+                
+                const problemsObj = data.problems || {};
+                const keys = Object.keys(problemsObj).sort((a, b) => parseInt(a) - parseInt(b));
+                
+                count.textContent = keys.length;
+                
+                if (keys.length === 0) {
+                    grid.innerHTML = '<p style="color:var(--text-muted);">No problems found.</p>';
+                    return;
+                }
+                
+                keys.forEach(id => {
+                    const p = problemsObj[id];
+                    
+                    const card = document.createElement('a');
+                    card.href = `problems/${id}/index.html`;
+                    card.className = 'card';
+                    
+                    const diffClass = (p.difficulty || 'easy').toLowerCase();
+                    
+                    let tagsHtml = '';
+                    if (p.tags && p.tags.length > 0) {
+                        tagsHtml = `<div class="tags">
+                            ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+                        </div>`;
+                    }
+                    
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <span class="card-title">#${id} - ${p.title}</span>
+                            <span class="badge ${diffClass}">${diffClass}</span>
+                        </div>
+                        ${tagsHtml}
+                    `;
+                    
+                    grid.appendChild(card);
+                });
+                
+            } catch (err) {
+                console.error(err);
+                document.getElementById('loading').innerHTML = 
+                    `<span style="color:#ef4444">Failed to load registry: ${err.message}</span>`;
+            }
+        }
+        
+        fetchProblems();
+    </script>
+</body>
+</html>
