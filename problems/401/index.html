@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Binary Watch Visualizer — LeetCode #401</title>
+    <meta name="description"
+        content="Interactive visualizer for Binary Watch (LeetCode #401). See all valid times for a given number of LEDs turned on." />
+    <link rel="stylesheet" href="../../shared/theme.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="header__brand">
+                <span class="header__icon">⌚</span>
+                <h1 class="header__title">Binary Watch</h1>
+                <span class="header__badge">LeetCode #401</span>
+            </div>
+            <p class="header__subtitle">Find all valid times for a given number of LEDs turned on</p>
+        </header>
+
+        <main class="main">
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="panel input-panel">
+                    <h2 class="panel__title">Input</h2>
+
+                    <div class="control-group">
+                        <label class="control-label" for="turnedOnSlider">
+                            turnedOn = <span id="turnedOnValue" class="mono accent">1</span>
+                        </label>
+                        <input type="range" id="turnedOnSlider" class="slider" min="0" max="10" value="1" step="1" />
+                    </div>
+
+                    <div class="button-row">
+                        <button id="btnVisualize" class="btn btn--primary">
+                            <span class="btn__icon">▶</span> Visualize
+                        </button>
+                        <button id="btnReset" class="btn btn--ghost">
+                            <span class="btn__icon">↺</span> Reset
+                        </button>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="speedSlider">
+                            Speed: <span id="speedValue">1×</span>
+                        </label>
+                        <input type="range" id="speedSlider" class="slider" min="1" max="5" value="2" step="1" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Watch Display -->
+            <section class="viz-section">
+                <div class="panel viz-panel">
+                    <h2 class="panel__title">Watch Display</h2>
+
+                    <div class="watch">
+                        <div class="watch__section">
+                            <div class="watch__label">Hours (0–11)</div>
+                            <div class="watch__leds" id="hourLeds">
+                                <div class="led" data-bit="3" data-value="8">8</div>
+                                <div class="led" data-bit="2" data-value="4">4</div>
+                                <div class="led" data-bit="1" data-value="2">2</div>
+                                <div class="led" data-bit="0" data-value="1">1</div>
+                            </div>
+                        </div>
+                        <div class="watch__divider">:</div>
+                        <div class="watch__section">
+                            <div class="watch__label">Minutes (0–59)</div>
+                            <div class="watch__leds" id="minuteLeds">
+                                <div class="led" data-bit="5" data-value="32">32</div>
+                                <div class="led" data-bit="4" data-value="16">16</div>
+                                <div class="led" data-bit="3" data-value="8">8</div>
+                                <div class="led" data-bit="2" data-value="4">4</div>
+                                <div class="led" data-bit="1" data-value="2">2</div>
+                                <div class="led" data-bit="0" data-value="1">1</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="watch__time" id="watchTime">—:——</div>
+
+                    <div id="statusBar" class="status-bar">
+                        Adjust <strong>turnedOn</strong> and click <strong>Visualize</strong>
+                    </div>
+                </div>
+
+                <!-- Valid Times Grid -->
+                <div class="panel times-panel" id="timesPanel" style="display:none;">
+                    <h2 class="panel__title">
+                        Valid Times
+                        <span class="times-count" id="timesCount">0</span>
+                    </h2>
+                    <div class="times-grid" id="timesGrid"></div>
+                </div>
+
+                <!-- Result Card -->
+                <div id="resultCard" class="result-card" style="display:none;">
+                    <div class="result-card__label">Total Valid Times</div>
+                    <div id="resultValue" class="result-card__value mono"></div>
+                </div>
+            </section>
+
+            <!-- Hints Section -->
+            <section class="hints-section">
+                <div class="panel hints-panel">
+                    <h2 class="panel__title">
+                        Hints
+                        <span class="hints-progress">
+                            <span id="hintsRevealed">0</span> / 4 revealed
+                        </span>
+                    </h2>
+                    <div class="hints-progress-bar">
+                        <div id="hintsProgressFill" class="hints-progress-bar__fill" style="width:0%"></div>
+                    </div>
+                    <div class="hints-list">
+                        <div class="hint" data-hint="1">
+                            <div class="hint__num">1</div>
+                            <div class="hint__text">
+                                A binary watch has <strong>10 LEDs</strong> total: 4 for hours and 6 for minutes. The
+                                number of ON LEDs determines the time shown.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="2">
+                            <div class="hint__num">2</div>
+                            <div class="hint__text">
+                                Think of it as distributing <code>turnedOn</code> LEDs between hours (0–3 LEDs) and
+                                minutes (0–6 LEDs). For each split <code>(h, m)</code> where
+                                <code>h + m = turnedOn</code>, find valid combinations.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="3">
+                            <div class="hint__num">3</div>
+                            <div class="hint__text">
+                                A simpler approach: iterate through all hours (0–11) and minutes (0–59). For each combo,
+                                count the total set bits. If it equals <code>turnedOn</code>, it's a valid time.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="4">
+                            <div class="hint__num">4</div>
+                            <div class="hint__text">
+                                <code>for h in 0..11: for m in 0..59: if popcount(h) + popcount(m) == turnedOn: add formatted time</code>.
+                                Complexity is O(1) since the loop is bounded by constants (12 × 60 = 720).
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>

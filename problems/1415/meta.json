@@ -1,0 +1,9 @@
+{
+  "id": 1415,
+  "title": "The k-th Lexicographical String of All Happy Strings of Length n",
+  "difficulty": "medium",
+  "tags": ["backtracking", "string"],
+  "author": "Vinayak-Sutar",
+  "url": "https://leetcode.com/problems/the-k-th-lexicographical-string-of-all-happy-strings-of-length-n/",
+  "description": "Watch backtracking recursively build happy strings character by character until the k-th valid string is found."
+}

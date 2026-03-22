@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy String Visualizer — LeetCode #1415</title>
+    <meta name="description"
+        content="Interactive visualizer for The k-th Lexicographical String of All Happy Strings of Length n (LeetCode #1415). Watch backtracking in action." />
+    <link rel="stylesheet" href="../../shared/theme.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="header__brand">
+                <span class="header__icon">😊</span>
+                <h1 class="header__title">The k-th Happy String</h1>
+                <span class="header__badge">LeetCode #1415</span>
+            </div>
+            <p class="header__subtitle">Watch backtracking recursively build happy strings character by character</p>
+        </header>
+
+        <main class="main">
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="panel input-panel">
+                    <h2 class="panel__title">Input</h2>
+                    <div class="preset-row">
+                        <span class="preset-label">Examples:</span>
+                        <button class="preset-btn active" data-preset="0">Exam 1 (n=1, k=3)</button>
+                        <button class="preset-btn" data-preset="1">Exam 2 (n=1, k=4)</button>
+                        <button class="preset-btn" data-preset="2">Exam 3 (n=3, k=9)</button>
+                        <button class="preset-btn" data-preset="3">Custom</button>
+                    </div>
+
+                    <div class="control-row">
+                        <div class="control-group">
+                            <label class="control-label" for="inputN">
+                                Length <span class="mono accent">n</span>: <span id="valN">3</span>
+                            </label>
+                            <input type="range" id="inputN" class="slider" min="1" max="10" value="3" step="1" />
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="inputK">
+                                Target <span class="mono accent">k</span>: <span id="valK">9</span>
+                            </label>
+                            <input type="number" id="inputK" class="input-number" min="1" max="100" value="9" />
+                        </div>
+                    </div>
+
+                    <div class="button-row">
+                        <button id="btnPlay" class="btn btn--primary">
+                            <span class="btn__icon">▶</span> Visualize
+                        </button>
+                        <button id="btnStep" class="btn btn--secondary">
+                            <span class="btn__icon">⏭</span> Step
+                        </button>
+                        <button id="btnReset" class="btn btn--ghost">
+                            <span class="btn__icon">↺</span> Reset
+                        </button>
+                    </div>
+
+                    <div class="control-group" style="margin-top: var(--space-xs);">
+                        <label class="control-label" for="speedSlider">
+                            Speed: <span id="speedValue">3×</span>
+                        </label>
+                        <input type="range" id="speedSlider" class="slider" min="1" max="5" value="3" step="1" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Visualization Area -->
+            <section class="viz-section">
+                <div class="panel viz-panel">
+                    <h2 class="panel__title">Backtracking Construction</h2>
+
+                    <!-- Current string being built -->
+                    <div class="builder">
+                        <div class="builder__label">Current String</div>
+                        <div class="slots" id="slotsContainer">
+                            <!-- Slots will be injected here via JS -->
+                        </div>
+                    </div>
+
+                    <div id="statusBar" class="status-bar">
+                        Adjust <strong>n</strong> and <strong>k</strong>, then click <strong>Visualize</strong>
+                    </div>
+                </div>
+
+                <!-- Found Strings -->
+                <div class="panel strings-panel">
+                    <h2 class="panel__title">
+                        Found Strings
+                        <span class="strings-counter">
+                            <span id="foundCount">0</span> / <span class="accent mono" id="targetCount">k</span>
+                        </span>
+                    </h2>
+                    <div class="strings-list" id="stringsList"></div>
+                </div>
+
+                <!-- Result Card -->
+                <div id="resultCard" class="result-card" style="display:none;">
+                    <div class="result-card__label">Answer</div>
+                    <div id="resultValue" class="result-card__value mono">""</div>
+                </div>
+            </section>
+
+            <!-- Hints Section -->
+            <section class="hints-section">
+                <div class="panel hints-panel">
+                    <h2 class="panel__title">
+                        Hints
+                        <span class="hints-progress">
+                            <span id="hintsRevealed">0</span> / 5 revealed
+                        </span>
+                    </h2>
+                    <div class="hints-progress-bar">
+                        <div id="hintsProgressFill" class="hints-progress-bar__fill" style="width:0%"></div>
+                    </div>
+                    <div class="hints-list">
+                        <div class="hint" data-hint="1">
+                            <div class="hint__num">1</div>
+                            <div class="hint__text">
+                                Think of building the string one character at a time. For each position, you can try 'a', 'b', and 'c'.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="2">
+                            <div class="hint__num">2</div>
+                            <div class="hint__text">
+                                Use a recursive backtracking function. The base case is when your current string length reaches exactly <span class="mono">n</span>.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="3">
+                            <div class="hint__num">3</div>
+                            <div class="hint__text">
+                                The "happy string" condition means you can only append a character if it is different from the last character of the current string.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="4">
+                            <div class="hint__num">4</div>
+                            <div class="hint__text">
+                                Since you process characters 'a', 'b', 'c' in alphabetical order during your recursion, the generated valid strings of length <span class="mono">n</span> will automatically be in lexicographical order.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="5">
+                            <div class="hint__num">5</div>
+                            <div class="hint__text">
+                                Keep a global counter or an array. Stop the recursion early as soon as you find the <span class="mono">k</span>-th string to optimize the process. If fewer than <span class="mono">k</span> strings exist, return an empty string.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>

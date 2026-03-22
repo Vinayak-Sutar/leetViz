@@ -1,0 +1,11 @@
+{
+    "id": 6,
+    "title": "Zigzag Conversion",
+    "difficulty": "medium",
+    "tags": [
+        "string"
+    ],
+    "author": "Vinayak-Sutar",
+    "url": "https://leetcode.com/problems/zigzag-conversion/",
+    "description": "Visualize how a string is arranged in a zigzag pattern across rows and read line by line."
+}

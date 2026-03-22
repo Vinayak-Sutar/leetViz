@@ -7,5 +7,6 @@
         "simulation"
     ],
     "author": "Vinayak-Sutar",
+    "url": "https://leetcode.com/problems/champagne-tower/",
     "description": "Watch champagne cascade through a pyramid of glasses with step-by-step DP animation."
 }

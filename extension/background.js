@@ -5,8 +5,8 @@
  * Tracks problem state per-tab for proper SPA handling.
  */
 
-// PRODUCTION: const GITHUB_PAGES_BASE = 'https://vinayak-sutar.github.io/leetViz';
-const GITHUB_PAGES_BASE = 'http://localhost:8190'; // LOCAL DEV
+const GITHUB_PAGES_BASE = 'https://vinayak-sutar.github.io/leetViz'; // PRODUCTION
+// const GITHUB_PAGES_BASE = 'http://localhost:8190'; // LOCAL DEV
 const REGISTRY_URL = `${GITHUB_PAGES_BASE}/problems/registry.json`;
 const REGISTRY_CACHE_MS = 5 * 60 * 1000;
 

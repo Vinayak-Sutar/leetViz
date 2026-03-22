@@ -32,6 +32,63 @@
       s.style.display = 'none';
     });
     el.style.display = 'flex';
+
+    // Populate available visualizers when showing notfound or noproblem states
+    if (el === stateNotFound || el === stateNoProblem || el === stateViz) {
+      renderAvailableList();
+    }
+  }
+
+  // ===== Render available visualizers list =====
+  async function renderAvailableList() {
+    const registry = await fetchRegistry();
+    const containers = [
+      document.getElementById('availableListNotFound'),
+      document.getElementById('availableListNoProblem'),
+      document.getElementById('availableListViz')
+    ];
+
+    containers.forEach(container => {
+      if (!container) return;
+
+      if (!registry || !registry.problems) {
+        container.textContent = 'Could not load list.';
+        return;
+      }
+
+      const entries = Object.entries(registry.problems)
+        .map(([num, info]) => ({ num, ...info }))
+        .sort((a, b) => parseInt(a.num) - parseInt(b.num));
+
+      if (entries.length === 0) {
+        container.textContent = 'No visualizers available yet.';
+        return;
+      }
+
+      container.innerHTML = entries.map(e => {
+        const diffClass = `sp-diff--${e.difficulty}`;
+        const url = e.url || `https://leetcode.com/problems/`;
+        return `
+          <a href="${url}" target="_blank" class="sp-available__item">
+            <span class="sp-available__num">#${e.num}</span>
+            <span class="sp-available__name">${e.title}</span>
+            <span class="sp-available__diff ${diffClass}">${e.difficulty}</span>
+          </a>`;
+      }).join('');
+    });
+  }
+
+  // ===== Drawer toggle =====
+  const drawerToggle = document.getElementById('drawerToggle');
+  const drawerContent = document.getElementById('drawerContent');
+  const drawerArrow = drawerToggle?.querySelector('.sp-viz-drawer__arrow');
+
+  if (drawerToggle) {
+    drawerToggle.addEventListener('click', () => {
+      const isOpen = drawerContent.style.display !== 'none';
+      drawerContent.style.display = isOpen ? 'none' : 'block';
+      drawerArrow.textContent = isOpen ? '▲' : '▼';
+    });
   }
 
   // ===== Fetch registry =====

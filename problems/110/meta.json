@@ -8,5 +8,6 @@
         "binary-tree"
     ],
     "author": "Vinayak-Sutar",
+    "url": "https://leetcode.com/problems/balanced-binary-tree/",
     "description": "Visualize DFS height computation to determine if a binary tree is height-balanced."
 }

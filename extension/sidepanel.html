@@ -32,6 +32,15 @@
         <div class="sp-state sp-viz" id="stateViz" style="display:none;">
             <iframe id="vizFrame" class="sp-iframe" sandbox="allow-scripts allow-same-origin"
                 title="Visualizer"></iframe>
+            <div class="sp-viz-drawer">
+                <button class="sp-viz-drawer__toggle" id="drawerToggle">
+                    <span>Other Visualizers</span>
+                    <span class="sp-viz-drawer__arrow">▲</span>
+                </button>
+                <div class="sp-viz-drawer__content" id="drawerContent" style="display:none;">
+                    <div class="sp-available__list" id="availableListViz">Loading…</div>
+                </div>
+            </div>
         </div>
 
         <!-- Not found state -->
@@ -54,6 +63,10 @@
             <p class="sp-notfound__hint">
                 Use the <strong>PROMPT.md</strong> to generate a visualizer with any LLM, then submit a PR!
             </p>
+            <div class="sp-available">
+                <h3 class="sp-available__title">Available Visualizers</h3>
+                <div class="sp-available__list" id="availableListNotFound">Loading…</div>
+            </div>
         </div>
 
         <!-- Error state -->
@@ -71,6 +84,23 @@
             <p class="sp-notfound__desc">
                 Open any LeetCode problem page to see if a visualizer is available.
             </p>
+            <div class="sp-notfound__actions">
+                <a href="https://github.com/Vinayak-Sutar/leetViz/blob/main/PROMPT.md" target="_blank"
+                    class="sp-btn sp-btn--primary">
+                    Build One with AI
+                </a>
+                <a href="https://github.com/Vinayak-Sutar/leetViz/blob/main/CONTRIBUTING.md" target="_blank"
+                    class="sp-btn sp-btn--ghost">
+                    Contribution Guide
+                </a>
+            </div>
+            <p class="sp-notfound__hint">
+                Use the <strong>PROMPT.md</strong> to generate a visualizer with any LLM, then submit a PR!
+            </p>
+            <div class="sp-available">
+                <h3 class="sp-available__title">Available Visualizers</h3>
+                <div class="sp-available__list" id="availableListNoProblem">Loading…</div>
+            </div>
         </div>
     </div>
 

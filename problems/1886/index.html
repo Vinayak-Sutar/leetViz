@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matrix Rotation Visualizer — LeetCode #1886</title>
+    <meta name="description"
+        content="Interactive visualizer for Determine Whether Matrix Can Be Obtained By Rotation (LeetCode #1886)." />
+    <link rel="stylesheet" href="../../shared/theme.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="header__brand">
+                <span class="header__icon">🔄</span>
+                <h1 class="header__title">Matrix Rotation Check</h1>
+                <span class="header__badge">LeetCode #1886</span>
+            </div>
+            <p class="header__subtitle">Watch a matrix rotate 90° and compare with the target matrix</p>
+        </header>
+
+        <main class="main">
+            <!-- Controls Section -->
+            <section class="input-section">
+                <div class="panel input-panel">
+                    <h2 class="panel__title">Input</h2>
+                    
+                    <div class="preset-row">
+                        <span class="preset-label">Examples:</span>
+                        <button class="preset-btn active" data-preset="0">Ex 1 (True)</button>
+                        <button class="preset-btn" data-preset="1">Ex 2 (False)</button>
+                        <button class="preset-btn" data-preset="2">Ex 3 (True 180°)</button>
+                        <button class="preset-btn" data-preset="3">Ex 4 (4x4)</button>
+                    </div>
+
+                    <div class="button-row" style="margin-top: var(--space-sm);">
+                        <button id="btnPlay" class="btn btn--primary">
+                            <span class="btn__icon">▶</span> Visualize
+                        </button>
+                        <button id="btnStep" class="btn btn--secondary">
+                            <span class="btn__icon">⏭</span> Step
+                        </button>
+                        <button id="btnReset" class="btn btn--ghost">
+                            <span class="btn__icon">↺</span> Reset
+                        </button>
+                    </div>
+
+                    <div class="control-group" style="margin-top: var(--space-xs);">
+                        <label class="control-label" for="speedSlider">
+                            Speed: <span id="speedValue">3×</span>
+                        </label>
+                        <input type="range" id="speedSlider" class="slider" min="1" max="5" value="3" step="1" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Visualization Area -->
+            <section class="viz-section">
+                <div class="panel viz-panel">
+                    <h2 class="panel__title">Rotation & Comparison</h2>
+
+                    <div class="matrices-container">
+                        <div class="matrix-wrapper">
+                            <div class="matrix-label">Current <span class="mono accent" id="degreeLabel">0°</span></div>
+                            <div class="matrix" id="matrixCurrent">
+                                <!-- Cells injected via JS -->
+                            </div>
+                        </div>
+
+                        <div class="matrix-divider">==?</div>
+
+                        <div class="matrix-wrapper">
+                            <div class="matrix-label">Target</div>
+                            <div class="matrix" id="matrixTarget">
+                                <!-- Cells injected via JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="statusBar" class="status-bar">
+                        Select an example and click <strong>Visualize</strong>
+                    </div>
+
+                    <!-- Result Card -->
+                    <div id="resultCard" class="result-card" style="display:none;">
+                        <div class="result-card__label">Answer</div>
+                        <div id="resultValue" class="result-card__value mono">false</div>
+                    </div>
+                </div>
+
+                <!-- Hints Section -->
+                <div class="panel hints-panel" style="margin-top: var(--space-lg);">
+                    <h2 class="panel__title">
+                        Hints
+                        <span class="hints-progress">
+                            <span id="hintsRevealed">0</span> / 4 revealed
+                        </span>
+                    </h2>
+                    <div class="hints-progress-bar">
+                        <div id="hintsProgressFill" class="hints-progress-bar__fill" style="width:0%"></div>
+                    </div>
+                    <div class="hints-list">
+                        <div class="hint" data-hint="1">
+                            <div class="hint__num">1</div>
+                            <div class="hint__text">
+                                A matrix can only be rotated in 4 unique ways: 0°, 90°, 180°, and 270°. After 360°, it returns to its original state.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="2">
+                            <div class="hint__num">2</div>
+                            <div class="hint__text">
+                                To avoid complex math mapping coordinates for every angle, simply write a helper function that rotates the matrix 90 degrees clockwise once, and call it up to 4 times.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="3">
+                            <div class="hint__num">3</div>
+                            <div class="hint__text">
+                                Rotating a matrix 90 degrees clockwise is equivalent to transposing the matrix (swapping rows and columns) and then reversing each row.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="4">
+                            <div class="hint__num">4</div>
+                            <div class="hint__text">
+                                Loop 4 times: check if `mat == target`. If yes, return true. If no, rotate `mat` 90 degrees. If the loop finishes without a match, return false.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>

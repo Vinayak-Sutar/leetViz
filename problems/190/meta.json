@@ -6,5 +6,6 @@
         "bit-manipulation"
     ],
     "author": "Vinayak-Sutar",
+    "url": "https://leetcode.com/problems/reverse-bits/",
     "description": "Reverse all 32 bits of an unsigned integer with animated step-by-step bit transfer."
 }

@@ -2,7 +2,11 @@
   "id": 1518,
   "title": "Water Bottles",
   "difficulty": "easy",
-  "tags": ["Math", "Simulation"],
+  "tags": [
+    "Math",
+    "Simulation"
+  ],
   "author": "leetviz-contributor",
+  "url": "https://leetcode.com/problems/water-bottles/",
   "description": "Visualize the process of drinking water bottles and exchanging empty bottles for full ones"
 }

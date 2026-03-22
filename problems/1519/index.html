@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sub-Tree Same Label Visualizer — LeetCode #1519</title>
+    <meta name="description"
+        content="Interactive visualizer for Number of Nodes in the Sub-Tree With the Same Label (LeetCode #1519). Watch DFS count matching labels in each subtree." />
+    <link rel="stylesheet" href="../../shared/theme.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="header__brand">
+                <span class="header__icon">⚡</span>
+                <h1 class="header__title">Sub-Tree Same Label</h1>
+                <span class="header__badge">LeetCode #1519</span>
+            </div>
+            <p class="header__subtitle">Count nodes with the same label in each subtree via DFS</p>
+        </header>
+
+        <main class="main">
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="panel input-panel">
+                    <h2 class="panel__title">Input</h2>
+                    <div class="preset-row">
+                        <span class="preset-label">Examples:</span>
+                        <button class="preset-btn active" data-preset="0">Example 1</button>
+                        <button class="preset-btn" data-preset="1">Example 2</button>
+                        <button class="preset-btn" data-preset="2">Example 3</button>
+                    </div>
+                    <div class="input-info">
+                        <div class="input-info__row">
+                            <span class="input-info__label">Nodes:</span>
+                            <span class="input-info__value mono" id="infoNodes">7</span>
+                        </div>
+                        <div class="input-info__row">
+                            <span class="input-info__label">Labels:</span>
+                            <span class="input-info__value mono" id="infoLabels">"abaedcd"</span>
+                        </div>
+                    </div>
+                    <div class="button-row">
+                        <button id="btnPlay" class="btn btn--primary">
+                            <span class="btn__icon">▶</span> Play
+                        </button>
+                        <button id="btnStep" class="btn btn--secondary">
+                            <span class="btn__icon">⏭</span> Step
+                        </button>
+                        <button id="btnReset" class="btn btn--ghost">
+                            <span class="btn__icon">↺</span> Reset
+                        </button>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="speedSlider">
+                            Speed: <span id="speedValue">1×</span>
+                        </label>
+                        <input type="range" id="speedSlider" class="slider" min="1" max="5" value="1" step="1" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Visualization Area -->
+            <section class="viz-section">
+                <div class="panel viz-panel">
+                    <h2 class="panel__title">Tree Visualization</h2>
+                    <svg id="treeSvg" class="tree-svg"></svg>
+                    <div id="statusBar" class="status-bar">
+                        Click <strong>Play</strong> or <strong>Step</strong> to begin DFS
+                    </div>
+                </div>
+
+                <!-- Result Card -->
+                <div id="resultCard" class="result-card" style="display:none;">
+                    <div class="result-card__label">Answer Array</div>
+                    <div id="resultValue" class="result-card__value mono"></div>
+                </div>
+            </section>
+
+            <!-- Hints Section -->
+            <section class="hints-section">
+                <div class="panel hints-panel">
+                    <h2 class="panel__title">
+                        Hints
+                        <span class="hints-progress">
+                            <span id="hintsRevealed">0</span> / 5 revealed
+                        </span>
+                    </h2>
+                    <div class="hints-progress-bar">
+                        <div id="hintsProgressFill" class="hints-progress-bar__fill" style="width:0%"></div>
+                    </div>
+                    <div class="hints-list">
+                        <div class="hint" data-hint="1">
+                            <div class="hint__num">1</div>
+                            <div class="hint__text">
+                                A subtree of node <em>i</em> includes node <em>i</em> itself and all its descendants.
+                                Think about how DFS naturally visits entire subtrees.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="2">
+                            <div class="hint__num">2</div>
+                            <div class="hint__text">
+                                For each node, you need to know the <strong>frequency of each character</strong> in its
+                                subtree. A frequency counter (array of 26) is perfect for this.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="3">
+                            <div class="hint__num">3</div>
+                            <div class="hint__text">
+                                Use post-order DFS: first recurse into all children, then <strong>merge</strong> their
+                                frequency counters into the parent's counter.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="4">
+                            <div class="hint__num">4</div>
+                            <div class="hint__text">
+                                After merging children, add +1 for the current node's own label. The answer for node
+                                <em>i</em> is <code>count[labels[i]]</code>.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="5">
+                            <div class="hint__num">5</div>
+                            <div class="hint__text">
+                                Build adjacency list from edges. DFS from root 0 with a <code>visited</code> set. At
+                                each node: <code>count = [0]*26</code>, recurse children, merge counts,
+                                <code>count[label] += 1</code>, set <code>ans[node] = count[label]</code>, return count.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>

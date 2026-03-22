@@ -1,0 +1,15 @@
+{
+    "id": 1519,
+    "title": "Number of Nodes in the Sub-Tree With the Same Label",
+    "difficulty": "medium",
+    "tags": [
+        "tree",
+        "depth-first-search",
+        "breadth-first-search",
+        "hash-table",
+        "counting"
+    ],
+    "author": "Vinayak-Sutar",
+    "url": "https://leetcode.com/problems/number-of-nodes-in-the-sub-tree-with-the-same-label/",
+    "description": "Visualize DFS traversal counting nodes with the same label in each subtree."
+}

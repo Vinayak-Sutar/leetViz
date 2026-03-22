@@ -1,0 +1,12 @@
+{
+    "id": 401,
+    "title": "Binary Watch",
+    "difficulty": "easy",
+    "tags": [
+        "bit-manipulation",
+        "backtracking"
+    ],
+    "author": "Vinayak-Sutar",
+    "url": "https://leetcode.com/problems/binary-watch/",
+    "description": "Visualize all possible times on a binary watch given the number of LEDs turned on."
+}
