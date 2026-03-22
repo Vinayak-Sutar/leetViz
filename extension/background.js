@@ -97,9 +97,26 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 });
 
-// ===== Open side panel when extension icon is clicked =====
-chrome.action.onClicked.addListener((tab) => {
-  chrome.sidePanel.open({ tabId: tab.id });
+// ===== Chrome Installation Setup =====
+chrome.runtime.onInstalled.addListener(() => {
+  // Disable the global side panel by default
+  chrome.sidePanel.setOptions({ enabled: false });
+  
+  // Clicking the extension icon opens the panel (only on enabled tabs)
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(console.error);
+
+  // Initialize existing tabs on reload
+  chrome.tabs.query({}, (tabs) => {
+    for (const tab of tabs) {
+      if (tab.url && tab.url.includes('leetcode.com/problems/')) {
+        chrome.sidePanel.setOptions({
+          tabId: tab.id,
+          path: 'sidepanel.html',
+          enabled: true
+        });
+      }
+    }
+  });
 });
 
 // ===== Enable/disable side panel based on tab URL =====
