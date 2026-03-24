@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Construct Product Matrix Visualizer — LeetCode #2906</title>
+    <meta name="description"
+        content="Interactive visualizer for Construct Product Matrix (LeetCode #2906)." />
+    <link rel="stylesheet" href="../../shared/theme.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="header__brand">
+                <span class="header__icon">✖️</span>
+                <h1 class="header__title">Construct Product Matrix</h1>
+                <span class="header__badge">LeetCode #2906</span>
+            </div>
+            <p class="header__subtitle">Visualize the product of all elements except the current one</p>
+        </header>
+
+        <main class="main">
+            <!-- Controls Section -->
+            <section class="input-section">
+                <div class="panel input-panel">
+                    <h2 class="panel__title">Controls</h2>
+                    
+                    <div class="preset-row">
+                        <span class="preset-label">Examples:</span>
+                        <button class="preset-btn active" data-preset="0">Ex 1 (2x2)</button>
+                        <button class="preset-btn" data-preset="1">Ex 2 (3x1)</button>
+                        <button class="preset-btn" data-preset="2">Ex 3 (2x3)</button>
+                    </div>
+
+                    <div class="button-row" style="margin-top: var(--space-sm);">
+                        <button id="btnPlay" class="btn btn--primary">
+                            <span class="btn__icon">▶</span> Visualize
+                        </button>
+                        <button id="btnStep" class="btn btn--secondary">
+                            <span class="btn__icon">⏭</span> Step
+                        </button>
+                        <button id="btnReset" class="btn btn--ghost">
+                            <span class="btn__icon">↺</span> Reset
+                        </button>
+                    </div>
+
+                    <div class="control-group" style="margin-top: var(--space-xs);">
+                        <label class="control-label" for="speedSlider">
+                            Speed: <span id="speedValue">3×</span>
+                        </label>
+                        <input type="range" id="speedSlider" class="slider" min="1" max="5" value="3" step="1" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Visualization Area -->
+            <section class="viz-section">
+                <div class="panel viz-panel">
+                    <h2 class="panel__title">Computation (Modulo 12345)</h2>
+
+                    <div class="matrices-container">
+                        <!-- 2D Input Grid -->
+                        <div class="matrix-wrapper">
+                            <div class="matrix-label">Input Grid</div>
+                            <div class="matrix" id="matrixInput"></div>
+                        </div>
+
+                        <!-- 2D Output Grid -->
+                        <div class="matrix-wrapper">
+                            <div class="matrix-label">Output Matrix</div>
+                            <div class="matrix" id="matrixOutput"></div>
+                        </div>
+                    </div>
+
+                    <div id="statusBar" class="status-bar">
+                        Select an example and click <strong>Visualize</strong>
+                    </div>
+                </div>
+
+                <!-- Hints Section -->
+                <div class="panel hints-panel" style="margin-top: var(--space-lg);">
+                    <h2 class="panel__title">
+                        Hints
+                        <span class="hints-progress">
+                            <span id="hintsRevealed">0</span> / 5 revealed
+                        </span>
+                    </h2>
+                    <div class="hints-progress-bar">
+                        <div id="hintsProgressFill" class="hints-progress-bar__fill" style="width:0%"></div>
+                    </div>
+                    <div class="hints-list">
+                        <div class="hint" data-hint="1">
+                            <div class="hint__num">1</div>
+                            <div class="hint__text">
+                                The naïve approach is to multiply all elements together, then divide by the current element. Why might that fail here?
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="2">
+                            <div class="hint__num">2</div>
+                            <div class="hint__text">
+                                Because we have to take the product modulo 12345, division won't work easily (12345 is not prime, making modular inverse impossible for some numbers). We must avoid division entirely.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="3">
+                            <div class="hint__num">3</div>
+                            <div class="hint__text">
+                                Imagine the 2D grid flattened into a 1D array. For any element at index `i`, its answer is the product of all elements to its left, multiplied by all elements to its right.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="4">
+                            <div class="hint__num">4</div>
+                            <div class="hint__text">
+                                Precompute a `prefix` array where `prefix[i]` is the product of elements from `0` to `i-1`. Do this in one pass from left to right.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="5">
+                            <div class="hint__num">5</div>
+                            <div class="hint__text">
+                                Precompute a `suffix` array where `suffix[i]` is the product of elements from `i+1` to `N-1`. Do this right to left. Then `ans[i] = (prefix[i] * suffix[i]) % 12345`.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>

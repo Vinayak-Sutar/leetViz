@@ -81,6 +81,16 @@
         "matrix"
       ],
       "url": "https://leetcode.com/problems/determine-whether-matrix-can-be-obtained-by-rotation/"
+    },
+    "2906": {
+      "title": "Construct Product Matrix",
+      "difficulty": "medium",
+      "tags": [
+        "array",
+        "matrix",
+        "prefix-sum"
+      ],
+      "url": "https://leetcode.com/problems/construct-product-matrix/"
     }
   }
 }

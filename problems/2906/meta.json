@@ -1,0 +1,9 @@
+{
+  "id": 2906,
+  "title": "Construct Product Matrix",
+  "difficulty": "medium",
+  "tags": ["array", "matrix", "prefix-sum"],
+  "author": "Vinayak-Sutar",
+  "url": "https://leetcode.com/problems/construct-product-matrix/",
+  "description": "Visualize the prefix & suffix product technique to construct the product matrix without division."
+}
