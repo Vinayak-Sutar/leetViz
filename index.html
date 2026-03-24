@@ -48,13 +48,12 @@
         }
 
         .features {
-            max-width: 800px;
-            margin: var(--space-xl) auto 0;
             text-align: left;
             background: var(--bg-secondary);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
             padding: var(--space-lg);
+            margin-bottom: var(--space-xl);
         }
 
         .features h3 {
@@ -155,7 +154,9 @@
         <h1>LeetViz</h1>
         <p>Interactive problem visualizations directly inside LeetCode.</p>
         <p style="margin-top: 1rem; font-size: 1rem;">LeetViz seamlessly integrates into LeetCode to help you visually understand what complex problems are actually asking. When you open a supported LeetCode problem, LeetViz automatically loads an interactive, step-by-step animation in your Chrome side panel — without obstructing your coding environment.</p>
+    </header>
 
+    <main class="container">
         <div class="features">
             <h3>Key Features</h3>
             <ul>
@@ -165,9 +166,7 @@
                 <li><strong>Community-Driven:</strong> All visualizers are open-source. Don't see a visualizer you need? Generate one with AI and submit it to the growing LeetViz registry!</li>
             </ul>
         </div>
-    </header>
 
-    <main class="container">
         <h2 class="section-title">Available Visualizers (<span id="count">0</span>)</h2>
         <div id="loading">Loading from registry.json...</div>
         <div class="grid" id="grid"></div>
