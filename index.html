@@ -44,7 +44,45 @@
         .grid {
             display: flex;
             flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .features {
+            max-width: 800px;
+            margin: var(--space-xl) auto 0;
+            text-align: left;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+        }
+
+        .features h3 {
+            color: var(--text-primary);
+            margin-bottom: var(--space-md);
+        }
+
+        .features ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
             gap: var(--space-md);
+        }
+
+        .features li {
+            color: var(--text-secondary);
+            line-height: 1.5;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .features li::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 0.9rem;
         }
 
         .card {
@@ -115,7 +153,18 @@
 <body>
     <header class="hero">
         <h1>LeetViz</h1>
-        <p>A community-driven collection of interactive, step-by-step visualizations for LeetCode problems. Built to plug cleanly into the Chrome Extension.</p>
+        <p>Interactive problem visualizations directly inside LeetCode.</p>
+        <p style="margin-top: 1rem; font-size: 1rem;">LeetViz seamlessly integrates into LeetCode to help you visually understand what complex problems are actually asking. When you open a supported LeetCode problem, LeetViz automatically loads an interactive, step-by-step animation in your Chrome side panel — without obstructing your coding environment.</p>
+
+        <div class="features">
+            <h3>Key Features</h3>
+            <ul>
+                <li><strong>Problem Dry-Runs:</strong> Watch a frame-by-frame visualization of the exact problem statement and example test cases. Understand what the problem is asking before you start coding, without the solution being spoiled!</li>
+                <li><strong>Progressive Hints:</strong> Unlock gentle structural hints when you're stuck, rather than immediately jumping to the discussion tabs.</li>
+                <li><strong>Custom Test Cases:</strong> Run the visualizer against LeetCode's exact preset examples.</li>
+                <li><strong>Community-Driven:</strong> All visualizers are open-source. Don't see a visualizer you need? Generate one with AI and submit it to the growing LeetViz registry!</li>
+            </ul>
+        </div>
     </header>
 
     <main class="container">
