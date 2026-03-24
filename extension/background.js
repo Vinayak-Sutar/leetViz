@@ -80,9 +80,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0]) {
         const problem = tabProblems.get(tabs[0].id) || null;
-        sendResponse({ problem, baseUrl: GITHUB_PAGES_BASE });
+        sendResponse({ problem, baseUrl: GITHUB_PAGES_BASE, tabId: tabs[0].id });
       } else {
-        sendResponse({ problem: null, baseUrl: GITHUB_PAGES_BASE });
+        sendResponse({ problem: null, baseUrl: GITHUB_PAGES_BASE, tabId: null });
       }
     });
     return true; // async

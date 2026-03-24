@@ -25,6 +25,7 @@
   // ===== State =====
   let currentLoadedNumber = null; // Track what's currently displayed
   let registryCache = null;
+  let myTabId = null; // Track this side-panel's associated tab
 
   // ===== Show specific state =====
   function showState(el) {
@@ -114,6 +115,7 @@
           console.warn('[LeetViz SP] Background unavailable:', chrome.runtime.lastError);
           resolve(null);
         } else {
+          myTabId = response?.tabId || null;
           resolve(response?.problem || null);
         }
       });
@@ -212,6 +214,11 @@
       const newVal = changes.currentProblem.newValue;
       console.log('[LeetViz SP] Storage changed:', newVal);
 
+      // Ignore storage changes meant for other tabs
+      if (myTabId && newVal && newVal.tabId && newVal.tabId !== myTabId) {
+        return;
+      }
+
       if (newVal && newVal.number) {
         if (newVal.number !== currentLoadedNumber) {
           registryCache = null; // Force fresh registry lookup
@@ -229,6 +236,10 @@
   chrome.runtime.onMessage.addListener((msg) => {
     if (msg.type === 'PROBLEM_CHANGED') {
       console.log('[LeetViz SP] Direct message received:', msg.problem);
+
+      if (myTabId && msg.problem && msg.problem.tabId && msg.problem.tabId !== myTabId) {
+        return;
+      }
 
       if (msg.problem && msg.problem.number && msg.problem.number !== currentLoadedNumber) {
         registryCache = null; // Force fresh registry lookup
