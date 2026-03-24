@@ -41,6 +41,6 @@
         "default_title": "Open LeetViz"
     },
     "host_permissions": [
-        "https://vinayak-sutar.github.io/*"
+        "https://vinayak-sutar.github.io/leetViz/*"
     ]
 }
