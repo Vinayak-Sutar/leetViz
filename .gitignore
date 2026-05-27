@@ -1,0 +1,29 @@
+# Ignore webstore submission assets and local media used for screenshots/previews
+# These are stored at repo root when preparing a Chrome Web Store submission
+
+# Zipped extension builds
+/leetviz-extension-*.zip
+/leetviz-*.zip
+
+# Screenshots and promo media used for store listing
+/webstore-screenshot-*.png
+/small-promo.png
+/marquee-promo.png
+/image.png
+/screenshot.png
+/linkedin.png
+
+# Video previews
+/leetviz.mp4
+/leetviz.mkv
+
+# Local export bundles
+/leetviz-*.zip
+
+# OS and editor junk
+.DS_Store
+Thumbs.db
+/.vscode/
+
+# Ignore any local archives placed at repo root for submission
+/submission-*.zip
