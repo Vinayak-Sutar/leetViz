@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Count the Number of Special Characters II - LeetCode #3121</title>
+  <meta name="description"
+    content="Interactive visualizer for LeetCode 3121. Track lowercase and uppercase positions to count special letters step by step." />
+  <link rel="stylesheet" href="../../shared/theme.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header__brand">
+        <span class="header__icon">🔤</span>
+        <h1 class="header__title">Count Special Characters II</h1>
+        <span class="header__badge">LeetCode #3121</span>
+      </div>
+      <p class="header__subtitle">Scan the string left-to-right and watch each letter become special or invalid.</p>
+    </header>
+
+    <main class="main">
+      <aside class="panel controls-panel">
+        <h2 class="panel__title">Controls</h2>
+
+        <div class="control-group">
+          <label class="control-label" for="wordInput">
+            Word
+            <span class="control-value" id="wordLength">7 chars</span>
+          </label>
+          <input id="wordInput" class="text-input mono" type="text" value="aaAbcBC" maxlength="80"
+            autocomplete="off" spellcheck="false" />
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="speedSlider">
+            Animation Speed
+            <span class="control-value" id="speedValue">2x</span>
+          </label>
+          <input id="speedSlider" class="slider" type="range" min="1" max="5" step="1" value="2" />
+        </div>
+
+        <div class="control-group">
+          <div class="control-label">Presets</div>
+          <div class="preset-row">
+            <button class="btn btn--secondary preset-btn" data-word="aaAbcBC">Example 1</button>
+            <button class="btn btn--secondary preset-btn" data-word="abc">Example 2</button>
+            <button class="btn btn--secondary preset-btn" data-word="AbBCab">Example 3</button>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button id="btnPlay" class="btn btn--primary">
+            <span class="btn__icon">▶</span> Play
+          </button>
+          <button id="btnStep" class="btn btn--secondary">
+            <span class="btn__icon">⏭</span> Step
+          </button>
+          <button id="btnReset" class="btn btn--ghost">
+            <span class="btn__icon">↺</span> Reset
+          </button>
+        </div>
+
+        <div class="result-card">
+          <div class="result-card__label">Special Letters Count</div>
+          <div class="result-card__value" id="specialCount">0</div>
+          <div class="result-card__bar-track">
+            <div class="result-card__bar-fill" id="specialCountBar"></div>
+          </div>
+        </div>
+
+        <div class="step-info">
+          <div class="step-info__label">Current Step</div>
+          <div class="step-info__value" id="stepValue">0 / 0</div>
+        </div>
+      </aside>
+
+      <section class="viz-area">
+        <div class="panel viz-panel">
+          <h2 class="panel__title">Visualization</h2>
+
+          <div class="legend">
+            <span class="legend__item"><span class="legend__swatch legend__swatch--active"></span>Active index</span>
+            <span class="legend__item"><span class="legend__swatch legend__swatch--special"></span>Special letter</span>
+            <span class="legend__item"><span class="legend__swatch legend__swatch--blocked"></span>Invalid order</span>
+          </div>
+
+          <div class="word-strip" id="wordStrip"></div>
+
+          <div class="status-line" id="statusLine">Press Play or Step to begin scanning.</div>
+
+          <div class="letters-grid" id="lettersGrid"></div>
+        </div>
+      </section>
+
+      <aside class="panel hints-panel">
+        <h2 class="panel__title">Hints</h2>
+        <div class="hints-progress">
+          <span id="hintsCount">0 / 5 revealed</span>
+          <div class="hints-progress__bar">
+            <div class="hints-progress__fill" id="hintsProgressFill"></div>
+          </div>
+        </div>
+
+        <div class="hints-container" id="hintsContainer">
+          <div class="hint" data-hint="0">
+            <div class="hint__num">1</div>
+            <div class="hint__text">Treat each letter independently. A letter only cares about where its lowercase and uppercase forms appear.</div>
+            <div class="hint__blur"><span class="hint__blur-icon">🔒</span><span class="hint__blur-label">Click to reveal</span></div>
+          </div>
+
+          <div class="hint locked" data-hint="1">
+            <div class="hint__num">2</div>
+            <div class="hint__text">The condition says every lowercase must come before the first uppercase. That suggests comparing two boundary positions.</div>
+            <div class="hint__blur"><span class="hint__blur-icon">🔒</span><span class="hint__blur-label">Click to reveal</span></div>
+          </div>
+
+          <div class="hint locked" data-hint="2">
+            <div class="hint__num">3</div>
+            <div class="hint__text">Track <code>lastLower[c]</code> and <code>firstUpper[c]</code> for each of the 26 letters while scanning once.</div>
+            <div class="hint__blur"><span class="hint__blur-icon">🔒</span><span class="hint__blur-label">Click to reveal</span></div>
+          </div>
+
+          <div class="hint locked" data-hint="3">
+            <div class="hint__num">4</div>
+            <div class="hint__text">For each character: update one tracker. After updates, a letter is valid only if both trackers exist and <code>lastLower &lt; firstUpper</code>.</div>
+            <div class="hint__blur"><span class="hint__blur-icon">🔒</span><span class="hint__blur-label">Click to reveal</span></div>
+          </div>
+
+          <div class="hint locked" data-hint="4">
+            <div class="hint__num">5</div>
+            <div class="hint__text">Final count formula: <code>sum(lastLower[i] != -1 && firstUpper[i] != -1 && lastLower[i] &lt; firstUpper[i])</code>.</div>
+            <div class="hint__blur"><span class="hint__blur-icon">🔒</span><span class="hint__blur-label">Click to reveal</span></div>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

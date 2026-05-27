@@ -91,6 +91,26 @@
         "prefix-sum"
       ],
       "url": "https://leetcode.com/problems/construct-product-matrix/"
+    },
+    "3121": {
+      "title": "Count the Number of Special Characters II",
+      "difficulty": "medium",
+      "tags": [
+        "string",
+        "hash-table",
+        "counting"
+      ],
+      "url": "https://leetcode.com/problems/count-the-number-of-special-characters-ii/"
+    },
+    "3474": {
+      "title": "Lexicographically Smallest Generated String",
+      "difficulty": "medium",
+      "tags": [
+        "string",
+        "greedy",
+        "simulation"
+      ],
+      "url": "https://leetcode.com/problems/lexicographically-smallest-generated-string/"
     }
   }
 }
