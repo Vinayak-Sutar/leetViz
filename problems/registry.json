@@ -8,6 +8,15 @@
       ],
       "url": "https://leetcode.com/problems/zigzag-conversion/"
     },
+    "24": {
+      "title": "Swap Nodes in Pairs",
+      "difficulty": "medium",
+      "tags": [
+        "linked-list",
+        "recursion"
+      ],
+      "url": "https://leetcode.com/problems/swap-nodes-in-pairs/"
+    },
     "110": {
       "title": "Balanced Binary Tree",
       "difficulty": "easy",
