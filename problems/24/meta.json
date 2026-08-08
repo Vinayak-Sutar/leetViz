@@ -1,0 +1,12 @@
+{
+    "id": 24,
+    "title": "Swap Nodes in Pairs",
+    "difficulty": "medium",
+    "tags": [
+        "linked-list",
+        "recursion"
+    ],
+    "author": "Antigravity",
+    "url": "https://leetcode.com/problems/swap-nodes-in-pairs/",
+    "description": "Visualize the pointer swaps needed to reverse every two adjacent nodes in a linked list."
+}

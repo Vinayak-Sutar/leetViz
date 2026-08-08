@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Swap Nodes in Pairs Visualizer — LeetCode #24</title>
+    <meta name="description"
+        content="Interactive visualizer for Swap Nodes in Pairs (LeetCode #24). Watch pointer updates step by step." />
+    <link rel="stylesheet" href="../../shared/theme.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="header__brand">
+                <span class="header__icon">🔗</span>
+                <h1 class="header__title">Swap Nodes in Pairs</h1>
+                <span class="header__badge">LeetCode #24</span>
+            </div>
+            <p class="header__subtitle">Visualize the pointer swaps needed to reverse every two adjacent nodes in a linked list</p>
+        </header>
+
+        <main class="main">
+            <section class="input-section">
+                <div class="panel input-panel">
+                    <h2 class="panel__title">Input</h2>
+                    <div class="control-group">
+                        <label class="control-label" for="listInput">Linked List (comma-separated)</label>
+                        <input type="text" id="listInput" class="text-input mono" value="1,2,3,4"
+                            placeholder="e.g. 1,2,3,4" />
+                    </div>
+                    <div class="preset-row">
+                        <span class="preset-label">Examples:</span>
+                        <button class="preset-btn" data-value="1,2,3,4">4 Nodes</button>
+                        <button class="preset-btn" data-value="1,2,3,4,5">Odd Nodes</button>
+                        <button class="preset-btn" data-value="1">Single</button>
+                        <button class="preset-btn" data-value="">Empty</button>
+                    </div>
+                    <div class="button-row">
+                        <button id="btnPlay" class="btn btn--primary">
+                            <span class="btn__icon">▶</span> Play
+                        </button>
+                        <button id="btnStep" class="btn btn--secondary">
+                            <span class="btn__icon">⏭</span> Step
+                        </button>
+                        <button id="btnReset" class="btn btn--ghost">
+                            <span class="btn__icon">↺</span> Reset
+                        </button>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="speedSlider">
+                            Speed: <span id="speedValue">1×</span>
+                        </label>
+                        <input type="range" id="speedSlider" class="slider" min="1" max="5" value="1" step="1" />
+                    </div>
+                </div>
+            </section>
+
+            <section class="viz-section">
+                <div class="panel viz-panel">
+                    <h2 class="panel__title">Linked List Visualization</h2>
+                    <div id="vizContainer" class="viz-container">
+                        <canvas id="listCanvas"></canvas>
+                    </div>
+                    <div id="statusBar" class="status-bar">
+                        Click <strong>Play</strong> or <strong>Step</strong> to begin swapping nodes
+                    </div>
+                </div>
+
+                <div id="resultCard" class="result-card" style="display:none;">
+                    <div class="result-card__label">Final List</div>
+                    <div id="resultValue" class="result-card__value">—</div>
+                </div>
+            </section>
+
+            <section class="hints-section">
+                <div class="panel hints-panel">
+                    <h2 class="panel__title">
+                        Hints
+                        <span class="hints-progress">
+                            <span id="hintsRevealed">0</span> / 5 revealed
+                        </span>
+                    </h2>
+                    <div class="hints-progress-bar">
+                        <div id="hintsProgressFill" class="hints-progress-bar__fill" style="width:0%"></div>
+                    </div>
+                    <div class="hints-list">
+                        <div class="hint" data-hint="1">
+                            <div class="hint__num">1</div>
+                            <div class="hint__text">
+                                Think about the pointers needed to perform a swap. You need to link the node BEFORE the pair to the SECOND node in the pair.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="2">
+                            <div class="hint__num">2</div>
+                            <div class="hint__text">
+                                A "dummy" node placed before the head can make handling the first pair much easier, since it guarantees every pair has a previous node.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="3">
+                            <div class="hint__num">3</div>
+                            <div class="hint__text">
+                                Let <code>prev</code> be the node before the pair, <code>first</code> be the first node, and <code>second</code> be the second node. How do they connect after the swap?
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="4">
+                            <div class="hint__num">4</div>
+                            <div class="hint__text">
+                                The new connections should be: <code>prev.next = second</code>, <code>first.next = second.next</code>, and <code>second.next = first</code>.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                        <div class="hint locked" data-hint="5">
+                            <div class="hint__num">5</div>
+                            <div class="hint__text">
+                                After swapping, don't forget to advance the <code>prev</code> pointer to the <code>first</code> node (which is now the second node in the swapped pair) to prepare for the next iteration.
+                            </div>
+                            <div class="hint__blur">
+                                <span class="hint__blur-icon">🔒</span>
+                                <span class="hint__blur-label">Click to reveal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
