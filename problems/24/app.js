@@ -205,7 +205,7 @@
     });
     
     if (index === steps.length - 1) {
-      showResult(step.order.slice(1).map(id => nodes.find(x => x.id == id).val).join(', '));
+      showResult(step.order.slice(1).filter(id => id !== -2).map(id => nodes.find(x => x.id == id).val).join(', '));
     } else {
       resultCard.style.display = 'none';
     }
@@ -364,10 +364,9 @@
   function init() {
     head = parseList(listInput.value);
     buildNodes();
-    resize();
-    generateSteps();
-    applyStep(-1);
     stepIndex = -1;
+    generateSteps();
+    resize();
   }
 
   // ===== Event Listeners =====
