@@ -65,8 +65,8 @@
     return dummy.next;
   }
 
-  // ===== Layout =====
-  function layoutList() {
+  // ===== Initial Build =====
+  function buildNodes() {
     nodes = [];
     let dummy = new ListNode('D', -1, true);
     dummy.next = head;
@@ -79,18 +79,8 @@
     
     let nullNode = new ListNode('null', -2, true);
     nodes.push(nullNode);
-    
-    const nodeSpacing = 80;
-    const totalWidth = (nodes.length - 1) * nodeSpacing;
-    const startX = Math.max(50, (canvasW - totalWidth) / 2);
-    
-    nodes.forEach((node, i) => {
-      node.targetX = startX + i * nodeSpacing;
-      node.targetY = canvasH / 2;
-      node.x = node.targetX;
-      node.y = node.targetY;
-    });
   }
+
 
   // ===== Generate Steps =====
   function generateSteps() {
@@ -364,11 +354,16 @@
     canvas.width = canvasW * window.devicePixelRatio;
     canvas.height = canvasH * window.devicePixelRatio;
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    layoutList();
+    if (nodes.length > 0) {
+      applyStep(stepIndex);
+      // Snap immediately to avoid sliding from previous canvas width
+      nodes.forEach(n => { n.x = n.targetX; n.y = n.targetY; });
+    }
   }
 
   function init() {
     head = parseList(listInput.value);
+    buildNodes();
     resize();
     generateSteps();
     applyStep(-1);
